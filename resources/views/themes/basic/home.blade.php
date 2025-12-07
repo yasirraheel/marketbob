@@ -7,16 +7,16 @@
             <div class="header-inner">
                 <div class="header-container">
                     <h1 class="header-title" data-aos="fade-down" data-aos-duration="1000">
-                        {{ translate('WordPress Templates, Plugins, PHP Scripts, and Graphics Digital Marketplace') }}
+                        {{ translate('TopDeals Plus - Premium Digital Products & Services Marketplace') }}
                     </h1>
                     <p class="header-text" data-aos="fade-up" data-aos-duration="1000">
-                        {{ translate('JavaScript, PHP Scripts, CSS, HTML5, Site Templates, WordPress Themes, Plugins, Mobile Apps, Graphics, Prints, Brochures, Flyers, Resumes, and More...') }}
+                        {{ translate('Discover Premium Software, Templates, Graphics, Courses, Tools, and Digital Services at Unbeatable Prices') }}
                     </p>
                     <div class="header-search" data-aos="fade-up" data-aos-duration="1000">
                         <div class="search">
                             @include('themes.basic.partials.search-form', [
                                 'url' => route('items.index'),
-                                'placeholder' => translate('e.g. Wordpress landing page'),
+                                'placeholder' => translate('Search for software, templates, tools...'),
                             ])
                         </div>
                     </div>
