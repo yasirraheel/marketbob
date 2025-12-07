@@ -75,15 +75,6 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="row g-3">
-                                    @if ($item->demo_link)
-                                        <div class="col-auto">
-                                            <a href="{{ $item->getDemoLink() }}" target="_blank"
-                                                class="btn btn-outline-secondary btn-md px-3">
-                                                <i class="fa-solid fa-up-right-from-square"></i>
-                                                <span class="ms-1">{{ translate('Live Preview') }}</span>
-                                            </a>
-                                        </div>
-                                    @endif
                                     <div class="col-auto">
                                         <livewire:item.favorite-button :item="$item">
                                     </div>
@@ -233,15 +224,6 @@
                                                 <span>{{ translate('Description') }}</span>
                                             </a>
                                         </div>
-                                        @if ($settings->item->changelogs_status && $item->hasChangelogs())
-                                            <div class="col">
-                                                <a href="{{ $item->getChangeLogsLink() }}"
-                                                    class="btn {{ request()->routeIs('items.changelogs') ? 'btn-primary' : 'btn-outline-secondary' }} btn-md w-100">
-                                                    <i class="fa-solid fa-rotate me-1"></i>
-                                                    <span>{{ translate('Changelogs') }}</span>
-                                                </a>
-                                            </div>
-                                        @endif
                                         @if (
                                             ($settings->item->reviews_status && $item->hasReviews()) ||
                                                 ($settings->item->reviews_status && authUser() && authUser()->hasPurchasedItem($item->id)))
@@ -666,20 +648,6 @@
                                     <p class="mb-0">{{ translate('Published') }}:</p>
                                     <p class="mb-0 ms-2">{{ dateFormat($item->created_at) }}</p>
                                 </div>
-                                @if ($item->version)
-                                    <div class="d-flex justify-content-between border-bottom pb-3 mb-3"">
-                                        <p class="mb-0">{{ translate('Version') }}:</p>
-                                        <p class="mb-0 ms-2">
-                                            @if (@$settings->item->changelogs_status && $item->hasChangelogs())
-                                                <a href="{{ $item->getChangelogsLink() }}">
-                                                    {{ translate('v:version', ['version' => $item->version]) }}
-                                                </a>
-                                            @else
-                                                <span>{{ translate('v:version', ['version' => $item->version]) }}</span>
-                                            @endif
-                                        </p>
-                                    </div>
-                                @endif
                                 <div class="d-flex justify-content-between border-bottom pb-3 mb-3"">
                                     <p class="mb-0">{{ translate('Category') }}:</p>
                                     <nav aria-label="breadcrumb">

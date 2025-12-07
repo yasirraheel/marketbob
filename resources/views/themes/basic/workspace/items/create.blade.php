@@ -82,16 +82,6 @@
                         @endforeach
                     @endif
                     <div class="col-12">
-                        <label class="form-label">{{ translate('Version (Optional)') }}</label>
-                        <input type="text" name="version" class="form-control form-control-md"
-                            placeholder="{{ translate('1.0 or 1.0.0') }}" value="{{ old('version') }}">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">{{ translate('Demo Link (Optional)') }}</label>
-                        <input type="url" name="demo_link" class="form-control form-control-md"
-                            value="{{ old('demo_link') }}">
-                    </div>
-                    <div class="col-12">
                         <label class="form-label">{{ translate('Tags') }}</label>
                         <input id="item-tags" type="text" name="tags" value="{{ old('tags') }}" required>
                         <div class="form-text">
