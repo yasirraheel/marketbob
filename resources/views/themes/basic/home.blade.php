@@ -16,7 +16,7 @@
                         <div class="search">
                             @include('themes.basic.partials.search-form', [
                                 'url' => route('items.index'),
-                                'placeholder' => translate('Search for software, templates, tools...'),
+                                'placeholder' => translate('Search for software, templates, graphics...'),
                             ])
                         </div>
                     </div>
