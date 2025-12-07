@@ -122,9 +122,9 @@
         @endif
         <div class="dashboard-card card-v p-0 mb-4">
             <div class="card-v-header border-bottom py-3 px-4 d-flex justify-content-between">
-                <h5 class="mb-0">{{ translate('Licenses Price') }}</h5>
+                <h5 class="mb-0">{{ translate('Subscription Pricing') }}</h5>
                 @if (@$settings->links->licenses_terms_link)
-                    <a href="{{ @$settings->links->licenses_terms_link }}">{{ translate('Licenses terms') }}<i
+                    <a href="{{ @$settings->links->licenses_terms_link }}">{{ translate('Terms') }}<i
                             class="fa-solid fa-angle-right fa-rtl ms-1"></i></a>
                 @endif
             </div>
@@ -132,7 +132,7 @@
                 <div class="row g-4 mb-3">
                     <div class="col-md-12 col-lg-4 col-xxl-5">
                         @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Regular License Price'),
+                            'label' => translate('1 Month Price'),
                             'id' => 'regular-license-price',
                             'name' => 'regular_license_price',
                             'min' => @$settings->item->minimum_price,
@@ -157,7 +157,7 @@
                     </div>
                     <div class="col-md-12 col-lg-4 col-xxl-5">
                         @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Extended License Price'),
+                            'label' => translate('12 Months Price'),
                             'id' => 'extended-license-price',
                             'name' => 'extended_license_price',
                             'min' => @$settings->item->minimum_price,

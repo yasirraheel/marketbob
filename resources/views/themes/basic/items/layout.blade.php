@@ -385,12 +385,12 @@
                                 <div class="card-v-header border-bottom py-3 px-4">
                                     <div class="row row-cols-auto align-items-center justify-content-between g-2">
                                         <div class="col">
-                                            <h5 class="mb-0">{{ translate('License Option') }}</h5>
+                                            <h5 class="mb-0">{{ translate('Subscription Validity') }}</h5>
                                         </div>
                                         @if (@$settings->links->licenses_terms_link)
                                             <div class="col small">
                                                 <a href="{{ @$settings->links->licenses_terms_link }}">
-                                                    <span>{{ translate('Licenses terms') }}</span>
+                                                    <span>{{ translate('Terms') }}</span>
                                                     <i class="fa fa-chevron-right fa-rtl ms-1 fa-sm"></i>
                                                 </a>
                                             </div>
@@ -408,9 +408,9 @@
                                             <label class="form-check-label d-flex justify-content-between"
                                                 for="license-type-regular">
                                                 <div>
-                                                    <h6 class="mb-1">{{ translate('Regular') }}</h6>
+                                                    <h6 class="mb-1">{{ translate('1 Month') }}</h6>
                                                     <span
-                                                        class="small text-muted">{{ translate('For one project') }}</span>
+                                                        class="small text-muted">{{ translate('Standard access') }}</span>
                                                 </div>
                                                 <div class="item-price">
                                                     @if ($item->isOnDiscount())
@@ -435,9 +435,9 @@
                                             <label class="form-check-label d-flex justify-content-between"
                                                 for="license-type-extended">
                                                 <div>
-                                                    <h6 class="mb-1">{{ translate('Extended') }}</h6>
+                                                    <h6 class="mb-1">{{ translate('12 Months') }}</h6>
                                                     <span
-                                                        class="small text-muted">{{ translate('For unlimited projects') }}</span>
+                                                        class="small text-muted">{{ translate('Extended access') }}</span>
                                                 </div>
                                                 <div class="item-price">
                                                     @if ($item->isOnDiscount() && $item->isExtendedOnDiscount())
