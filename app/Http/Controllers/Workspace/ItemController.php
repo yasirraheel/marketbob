@@ -219,20 +219,6 @@ class ItemController extends Controller
             $mainFile = $itemFiles->main_file;
             $screenshots = $itemFiles->screenshots;
 
-            $itemFilesValues = collect([
-                $itemFiles->thumbnail,
-                $itemFiles->preview_type,
-                $itemFiles->preview_image,
-                $itemFiles->preview_video,
-                $itemFiles->preview_audio,
-                $itemFiles->main_file,
-            ])->filter();
-
-            if ($itemFilesValues->unique()->count() !== $itemFilesValues->count()) {
-                toastr()->error(translate('You cannot use the same file in two different fields'));
-                return back()->withInput();
-            }
-
             $regularPrice = $request->regular_license_price;
             $extendedPrice = $request->extended_license_price;
 
@@ -386,20 +372,6 @@ class ItemController extends Controller
             $previewAudio = $itemFiles->preview_audio;
             $mainFile = $itemFiles->main_file;
             $screenshots = $itemFiles->screenshots;
-
-            $itemFilesValues = collect([
-                $itemFiles->thumbnail,
-                $itemFiles->preview_type,
-                $itemFiles->preview_image,
-                $itemFiles->preview_video,
-                $itemFiles->preview_audio,
-                $itemFiles->main_file,
-            ])->filter();
-
-            if ($itemFilesValues->unique()->count() !== $itemFilesValues->count()) {
-                toastr()->error(translate('You cannot use the same file in two different fields'));
-                return back()->withInput();
-            }
 
             if (!$item->hasDiscount()) {
                 $regularPrice = $request->regular_license_price;
