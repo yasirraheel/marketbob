@@ -607,14 +607,6 @@ class ItemController extends Controller
             if (!in_array($thumbnail->mime_type, $this->imageMimeTypes)) {
                 throw new Exception(translate('Thumbnail must be the type of JPG or PNG'));
             }
-            $image = Image::make($thumbnail->getFileLink());
-            $thumbnailMaxWidth = $category->thumbnail_width;
-            $thumbnailMaxHeight = $category->thumbnail_height;
-            if ($image->width() != $thumbnailMaxWidth || $image->height() != $thumbnailMaxHeight) {
-                throw new Exception(translate('The dimensions of the thumbnail must be :dimensions', [
-                    'dimensions' => $thumbnailMaxWidth . 'x' . $thumbnailMaxHeight,
-                ]));
-            }
             $response['thumbnail'] = $thumbnail->path;
         } else {
             if ($required) {
@@ -631,17 +623,6 @@ class ItemController extends Controller
                 }
                 if (!in_array($previewImage->mime_type, $this->imageMimeTypes)) {
                     throw new Exception(translate('Preview image must be the type of JPG or PNG'));
-                }
-                if ($previewImage->size > $category->max_preview_file_size) {
-                    throw new Exception(translate('Preview image max file size is :size', ['size' => formatBytes($category->max_preview_file_size)]));
-                }
-                $image = Image::make($previewImage->getFileLink());
-                $previewImageMaxWidth = $category->preview_image_width;
-                $previewImageMaxHeight = $category->preview_image_height;
-                if ($image->width() != $previewImageMaxWidth || $image->height() != $previewImageMaxHeight) {
-                    throw new Exception(translate('The dimensions of the preview image must be :dimensions', [
-                        'dimensions' => $previewImageMaxWidth . 'x' . $previewImageMaxHeight,
-                    ]));
                 }
                 $response['preview_image'] = $previewImage->path;
             } else {
