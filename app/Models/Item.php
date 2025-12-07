@@ -312,6 +312,7 @@ class Item extends Model
         'main_file',
         'is_main_file_external',
         'screenshots',
+        'validity_prices',
         'regular_price',
         'extended_price',
         'is_supported',

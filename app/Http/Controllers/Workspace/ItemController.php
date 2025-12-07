@@ -190,6 +190,20 @@ class ItemController extends Controller
                 return back()->withInput();
             }
 
+            // Check if at least one validity price is provided
+            $validityPricesArray = $request->validity_prices ?? [];
+            $hasPrice = false;
+            foreach ($validityPricesArray as $price) {
+                if ($price !== null && $price > 0) {
+                    $hasPrice = true;
+                    break;
+                }
+            }
+            if (!$hasPrice) {
+                toastr()->error(translate('Please provide at least one validity period price'));
+                return back()->withInput();
+            }
+
             $free = Item::NOT_FREE;
             $purchasing = Item::PURCHASING_STATUS_ENABLED;
             if (@$itemSettings->free_item_option) {
@@ -347,6 +361,22 @@ class ItemController extends Controller
                     toastr()->error($error);
                 }
                 return back()->withInput();
+            }
+
+            // Check if at least one validity price is provided
+            if (!$item->hasDiscount()) {
+                $validityPricesArray = $request->validity_prices ?? [];
+                $hasPrice = false;
+                foreach ($validityPricesArray as $price) {
+                    if ($price !== null && $price > 0) {
+                        $hasPrice = true;
+                        break;
+                    }
+                }
+                if (!$hasPrice) {
+                    toastr()->error(translate('Please provide at least one validity period price'));
+                    return back()->withInput();
+                }
             }
 
             $free = Item::NOT_FREE;
