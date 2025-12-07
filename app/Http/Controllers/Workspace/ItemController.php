@@ -210,7 +210,7 @@ class ItemController extends Controller
                 $subCategory = SubCategory::where('slug', $request->sub_category)->firstOrFail();
             }
 
-            $itemFiles = $this->handleItemFiles($request, $category);
+            $itemFiles = $this->handleItemFiles($request, $category, false);
             $thumbnail = $itemFiles->thumbnail;
             $previewType = $itemFiles->preview_type;
             $previewImage = $itemFiles->preview_image;
