@@ -401,59 +401,27 @@
                                     <form data-action="{{ route('cart.add-item') }}" class="add-to-cart-form"
                                         method="POST">
                                         <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                        <div class="form-check form-check-lg mb-3">
-                                            <input id="license-type-regular"
-                                                class="form-check-input license-type mt-1" type="radio"
-                                                name="license_type" value="1" checked>
-                                            <label class="form-check-label d-flex justify-content-between"
-                                                for="license-type-regular">
-                                                <div>
-                                                    <h6 class="mb-1">{{ translate('1 Month') }}</h6>
-                                                    <span
-                                                        class="small text-muted">{{ translate('Standard access') }}</span>
+                                        <input type="hidden" name="license_type" value="1">
+                                        <div class="mb-4 p-4 bg-light rounded-3">
+                                            <div class="row align-items-center justify-content-between g-3">
+                                                <div class="col">
+                                                    <h6 class="mb-1">{{ translate('Subscription Validity') }}</h6>
+                                                    <span class="small text-muted">
+                                                        @if ($item->validity && $item->validity > 0)
+                                                            {{ $item->validity }} {{ translate($item->validity > 1 ? 'months' : 'month') }}
+                                                        @else
+                                                            {{ translate('Lifetime access') }}
+                                                        @endif
+                                                    </span>
                                                 </div>
-                                                <div class="item-price">
-                                                    @if ($item->isOnDiscount())
-                                                        <span class="item-price-through">
-                                                            {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
-                                                        </span>
-                                                        <span class="item-price-number">
-                                                            {{ getAmount($item->price->regular, 2, '.', '', true) }}
-                                                        </span>
-                                                    @else
+                                                <div class="col-auto">
+                                                    <div class="item-price">
                                                         <span class="item-price-number">
                                                             {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
                                                         </span>
-                                                    @endif
+                                                    </div>
                                                 </div>
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-lg mb-3">
-                                            <input id="license-type-extended"
-                                                class="form-check-input license-type mt-1" type="radio"
-                                                name="license_type" value="2">
-                                            <label class="form-check-label d-flex justify-content-between"
-                                                for="license-type-extended">
-                                                <div>
-                                                    <h6 class="mb-1">{{ translate('12 Months') }}</h6>
-                                                    <span
-                                                        class="small text-muted">{{ translate('Extended access') }}</span>
-                                                </div>
-                                                <div class="item-price">
-                                                    @if ($item->isOnDiscount() && $item->isExtendedOnDiscount())
-                                                        <span class="item-price-through">
-                                                            {{ getAmount($item->getExtendedPrice(), 2, '.', '', true) }}
-                                                        </span>
-                                                        <span class="item-price-number">
-                                                            {{ getAmount($item->price->extended, 2, '.', '', true) }}
-                                                        </span>
-                                                    @else
-                                                        <span class="item-price-number">
-                                                            {{ getAmount($item->getExtendedPrice(), 2, '.', '', true) }}
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                            </label>
+                                            </div>
                                         </div>
                                         @if (@$settings->item->support_status)
                                             @if ($item->isSupported())
@@ -483,9 +451,6 @@
                                                                         <div class="col-auto">
                                                                             <strong class="regular-support">
                                                                                 {{ $supportPeriod->isFree() ? translate('Free') : getAmount(($item->price->regular * $supportPeriod->percentage) / 100) }}
-                                                                            </strong>
-                                                                            <strong class="extended-support d-none">
-                                                                                {{ $supportPeriod->isFree() ? translate('Free') : getAmount(($item->price->extended * $supportPeriod->percentage) / 100) }}
                                                                             </strong>
                                                                         </div>
                                                                     </div>

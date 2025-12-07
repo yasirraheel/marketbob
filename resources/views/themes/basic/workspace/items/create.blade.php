@@ -130,9 +130,17 @@
             </div>
             <div class="card-v-body p-4">
                 <div class="row g-4 mb-3">
-                    <div class="col-md-12 col-lg-4 col-xxl-5">
+                    <div class="col-md-12 col-lg-6">
+                        <label class="form-label">{{ translate('Subscription Validity (in months)') }}</label>
+                        <input type="number" name="validity" class="form-control form-control-md" 
+                            min="1" placeholder="e.g., 1, 3, 6, 12" value="{{ old('validity') }}" required>
+                        <div class="form-text">
+                            {{ translate('Enter the validity period in months (1, 3, 6, 12, etc.)') }}
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
                         @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('1 Month Price'),
+                            'label' => translate('Price'),
                             'id' => 'regular-license-price',
                             'name' => 'regular_license_price',
                             'min' => @$settings->item->minimum_price,
@@ -140,42 +148,17 @@
                             'required' => true,
                         ])
                     </div>
-                    <div class="col-md-12 col-lg-4 col-xxl-3">
+                    <div class="col-md-12 col-lg-6">
                         @include('themes.basic.workspace.partials.input-price', [
                             'label' => translate('Buyer fee'),
                             'value' => $category->regular_buyer_fee,
                             'disabled' => true,
                         ])
                     </div>
-                    <div class="col-md-12 col-lg-4 col-xxl-4">
+                    <div class="col-md-12 col-lg-6">
                         @include('themes.basic.workspace.partials.input-price', [
                             'label' => translate('Purchase price'),
                             'id' => 'regular-license-purchase-price',
-                            'value' => 0,
-                            'disabled' => true,
-                        ])
-                    </div>
-                    <div class="col-md-12 col-lg-4 col-xxl-5">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('12 Months Price'),
-                            'id' => 'extended-license-price',
-                            'name' => 'extended_license_price',
-                            'min' => @$settings->item->minimum_price,
-                            'max' => @$settings->item->maximum_price,
-                            'required' => true,
-                        ])
-                    </div>
-                    <div class="col-md-12 col-lg-4 col-xxl-3">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Buyer fee'),
-                            'value' => $category->extended_buyer_fee,
-                            'disabled' => true,
-                        ])
-                    </div>
-                    <div class="col-md-12 col-lg-4 col-xxl-4">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Purchase price'),
-                            'id' => 'extended-license-purchase-price',
                             'value' => 0,
                             'disabled' => true,
                         ])
