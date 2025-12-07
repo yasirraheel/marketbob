@@ -10,7 +10,7 @@
                         {{ translate('TopDeals Plus - Premium Digital Products & Services Marketplace') }}
                     </h1>
                     <p class="header-text" data-aos="fade-up" data-aos-duration="1000">
-                        {{ translate('Discover Premium Software, Templates, Graphics, Courses, Tools, and Digital Services at Unbeatable Prices') }}
+                        {{ translate('Get High-Quality Digital Products at Lower Prices - Software, Templates, Graphics, Tools, and More') }}
                     </p>
                     <div class="header-search" data-aos="fade-up" data-aos-duration="1000">
                         <div class="search">
