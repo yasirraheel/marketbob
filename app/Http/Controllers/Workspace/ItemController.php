@@ -153,8 +153,8 @@ class ItemController extends Controller
             'version' => ['nullable', 'regex:/^\d+\.\d+(\.\d+)*$/', 'max:100'],
             'demo_link' => ['nullable', 'url', 'block_patterns'],
             'tags' => ['required', 'block_patterns'],
-            'regular_license_price' => ['required', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price],
-            'extended_license_price' => ['required', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price],
+            'validity_prices' => ['required', 'array'],
+            'validity_prices.*' => ['nullable', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price],
             'free_item' => ['nullable', 'boolean'],
             'purchasing_status' => ['nullable', 'boolean'],
             'message' => ['nullable', 'string'],
@@ -219,8 +219,7 @@ class ItemController extends Controller
             $mainFile = $itemFiles->main_file;
             $screenshots = $itemFiles->screenshots;
 
-            $regularPrice = $request->regular_license_price;
-            $extendedPrice = $request->extended_license_price;
+            $validityPrices = json_encode($request->validity_prices);
 
             $status = @$itemSettings->adding_require_review ? Item::STATUS_PENDING : Item::STATUS_APPROVED;
             $itemHistoryTitle = @$itemSettings->adding_require_review ? ItemHistory::TITLE_SUBMISSION : ItemHistory::TITLE_TRUST_SUBMISSION;
@@ -244,8 +243,9 @@ class ItemController extends Controller
             $item->main_file = $mainFile;
             $item->is_main_file_external = $request->main_file_source;
             $item->screenshots = $screenshots;
-            $item->regular_price = $regularPrice;
-            $item->extended_price = $extendedPrice;
+            $item->validity_prices = $validityPrices;
+            $item->regular_price = 0;
+            $item->extended_price = 0;
             $item->is_supported = $request->support;
             $item->support_instructions = $request->support_instructions;
             $item->purchasing_status = $purchasing;
@@ -336,8 +336,8 @@ class ItemController extends Controller
         }
 
         if (!$item->hasDiscount()) {
-            $rules['regular_license_price'] = ['required', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price];
-            $rules['extended_license_price'] = ['required', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price];
+            $rules['validity_prices'] = ['required', 'array'];
+            $rules['validity_prices.*'] = ['nullable', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price];
         }
 
         try {
@@ -374,17 +374,15 @@ class ItemController extends Controller
             $screenshots = $itemFiles->screenshots;
 
             if (!$item->hasDiscount()) {
-                $regularPrice = $request->regular_license_price;
-                $extendedPrice = $request->extended_license_price;
+                $validityPrices = json_encode($request->validity_prices);
 
-                if ($regularPrice != $item->regular_price || $extendedPrice != $item->extended_price) {
+                if ($validityPrices != $item->validity_prices) {
                     $priceUpdatedAt = Carbon::now();
                 } else {
                     $priceUpdatedAt = $item->price_updated_at;
                 }
             } else {
-                $regularPrice = $item->regular_price;
-                $extendedPrice = $item->extended_price;
+                $validityPrices = $item->validity_prices;
                 $priceUpdatedAt = $item->price_updated_at;
             }
 
@@ -426,8 +424,9 @@ class ItemController extends Controller
                     }
 
                     $itemUpdate->screenshots = $screenshots;
-                    $itemUpdate->regular_price = $regularPrice;
-                    $itemUpdate->extended_price = $extendedPrice;
+                    $itemUpdate->validity_prices = $validityPrices;
+                    $itemUpdate->regular_price = 0;
+                    $itemUpdate->extended_price = 0;
                     $itemUpdate->is_supported = $request->support;
                     $itemUpdate->support_instructions = $request->support_instructions;
                     $itemUpdate->purchasing_status = $purchasing;
@@ -488,8 +487,9 @@ class ItemController extends Controller
                 $item->screenshots = $screenshots;
             }
 
-            $item->regular_price = $regularPrice;
-            $item->extended_price = $extendedPrice;
+            $item->validity_prices = $validityPrices;
+            $item->regular_price = 0;
+            $item->extended_price = 0;
             $item->is_supported = $request->support;
             $item->support_instructions = $request->support_instructions;
             $item->status = $status;
