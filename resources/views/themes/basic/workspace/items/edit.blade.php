@@ -142,7 +142,7 @@
                         </div>
                         <div class="dashboard-card card-v p-0 mb-4">
                             <div class="card-v-header border-bottom py-3 px-4 d-flex justify-content-between">
-                                <h5 class="mb-0">{{ translate('Licenses Price') }}</h5>
+                                <h5 class="mb-0">{{ translate('Subscription Pricing') }}</h5>
                                 @if (@$settings->links->licenses_terms_link)
                                     <a href="{{ @$settings->links->licenses_terms_link }}">{{ translate('Licenses terms') }}<i
                                             class="fa-solid fa-angle-right fa-rtl ms-1"></i></a>
@@ -151,58 +151,32 @@
                             <div class="card-v-body p-4">
                                 @if (!$item->hasDiscount())
                                     <div class="row g-4 mb-3">
-                                        <div class="col-md-12 col-lg-4 col-xxl-5">
-                                            @include('themes.basic.workspace.partials.input-price', [
-                                                'label' => translate('Regular License Price'),
-                                                'id' => 'regular-license-price',
-                                                'name' => 'regular_license_price',
-                                                'value' => $item->regular_price,
-                                                'min' => @$settings->item->minimum_price,
-                                                'max' => @$settings->item->maximum_price,
-                                                'required' => true,
-                                            ])
-                                        </div>
-                                        <div class="col-md-12 col-lg-4 col-xxl-3">
-                                            @include('themes.basic.workspace.partials.input-price', [
-                                                'label' => translate('Buyer fee'),
-                                                'value' => $category->regular_buyer_fee,
-                                                'disabled' => true,
-                                            ])
-                                        </div>
-                                        <div class="col-md-12 col-lg-4 col-xxl-4">
-                                            @include('themes.basic.workspace.partials.input-price', [
-                                                'label' => translate('Purchase price'),
-                                                'id' => 'regular-license-purchase-price',
-                                                'value' => 0,
-                                                'disabled' => true,
-                                            ])
-                                        </div>
-                                        <div class="col-md-12 col-lg-4 col-xxl-5">
-                                            @include('themes.basic.workspace.partials.input-price', [
-                                                'label' => translate('Extended License Price'),
-                                                'id' => 'extended-license-price',
-                                                'name' => 'extended_license_price',
-                                                'value' => $item->extended_price,
-                                                'min' => @$settings->item->minimum_price,
-                                                'max' => @$settings->item->maximum_price,
-                                                'required' => true,
-                                            ])
-                                        </div>
-                                        <div class="col-md-12 col-lg-4 col-xxl-3">
-                                            @include('themes.basic.workspace.partials.input-price', [
-                                                'label' => translate('Buyer fee'),
-                                                'value' => $category->extended_buyer_fee,
-                                                'disabled' => true,
-                                            ])
-                                        </div>
-                                        <div class="col-md-12 col-lg-4 col-xxl-4">
-                                            @include('themes.basic.workspace.partials.input-price', [
-                                                'label' => translate('Purchase price'),
-                                                'id' => 'extended-license-purchase-price',
-                                                'value' => 0,
-                                                'disabled' => true,
-                                            ])
-                                        </div>
+                                        @php
+                                            $validityPeriods = [
+                                                ['months' => 1, 'label' => '1 Month'],
+                                                ['months' => 3, 'label' => '3 Months'],
+                                                ['months' => 6, 'label' => '6 Months'],
+                                                ['months' => 12, 'label' => '12 Months']
+                                            ];
+                                            $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                                        @endphp
+                                        @foreach($validityPeriods as $period)
+                                            <div class="col-md-6 col-lg-6">
+                                                <label class="form-label">{{ translate($period['label']) }} - {{ translate('Price') }}</label>
+                                                @include('themes.basic.workspace.partials.input-price', [
+                                                    'label' => '',
+                                                    'id' => 'validity-' . $period['months'] . '-price',
+                                                    'name' => 'validity_prices[' . $period['months'] . ']',
+                                                    'value' => $validityPrices[$period['months']] ?? 0,
+                                                    'min' => @$settings->item->minimum_price,
+                                                    'max' => @$settings->item->maximum_price,
+                                                    'required' => false,
+                                                ])
+                                                <div class="form-text">
+                                                    {{ translate('Leave empty to not offer this period') }}
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 @else
                                     <div class="alert alert-warning mb-0">

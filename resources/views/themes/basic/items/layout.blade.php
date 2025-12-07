@@ -402,27 +402,53 @@
                                         method="POST">
                                         <input type="hidden" name="item_id" value="{{ $item->id }}">
                                         <input type="hidden" name="license_type" value="1">
-                                        <div class="mb-4 p-4 bg-light rounded-3">
-                                            <div class="row align-items-center justify-content-between g-3">
-                                                <div class="col">
-                                                    <h6 class="mb-1">{{ translate('Subscription Validity') }}</h6>
-                                                    <span class="small text-muted">
-                                                        @if ($item->validity && $item->validity > 0)
-                                                            {{ $item->validity }} {{ translate($item->validity > 1 ? 'months' : 'month') }}
-                                                        @else
-                                                            {{ translate('Lifetime access') }}
-                                                        @endif
-                                                    </span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div class="item-price">
-                                                        <span class="item-price-number">
-                                                            {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
+                                        @php
+                                            $validityPeriods = [1, 3, 6, 12];
+                                            $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                                            $availablePeriods = [];
+                                            foreach($validityPeriods as $period) {
+                                                if(isset($validityPrices[$period]) && $validityPrices[$period] > 0) {
+                                                    $availablePeriods[] = ['months' => $period, 'price' => $validityPrices[$period]];
+                                                }
+                                            }
+                                        @endphp
+                                        @if(count($availablePeriods) > 1)
+                                            <div class="mb-4">
+                                                @foreach($availablePeriods as $period)
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input validity-radio" type="radio" name="validity_period" 
+                                                            id="validity_{{ $period['months'] }}" value="{{ $period['months'] }}"
+                                                            data-price="{{ $period['price'] }}" 
+                                                            {{ $loop->first ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="validity_{{ $period['months'] }}">
+                                                            {{ $period['months'] }} {{ translate($period['months'] > 1 ? 'months' : 'month') }} - 
+                                                            <span class="validity-price" data-period="{{ $period['months'] }}">
+                                                                {{ getAmount($period['price'], 2, '.', '', true) }}
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @elseif(count($availablePeriods) == 1)
+                                            <div class="mb-4 p-4 bg-light rounded-3">
+                                                <div class="row align-items-center justify-content-between g-3">
+                                                    <div class="col">
+                                                        <h6 class="mb-1">{{ translate('Subscription Validity') }}</h6>
+                                                        <span class="small text-muted">
+                                                            {{ $availablePeriods[0]['months'] }} {{ translate($availablePeriods[0]['months'] > 1 ? 'months' : 'month') }}
                                                         </span>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="item-price">
+                                                            <span class="item-price-number">
+                                                                {{ getAmount($availablePeriods[0]['price'], 2, '.', '', true) }}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <input type="hidden" name="validity_period" value="{{ $availablePeriods[0]['months'] }}">
+                                        @endif
                                         @if (@$settings->item->support_status)
                                             @if ($item->isSupported())
                                                 @php

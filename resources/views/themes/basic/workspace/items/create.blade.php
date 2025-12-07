@@ -130,39 +130,30 @@
             </div>
             <div class="card-v-body p-4">
                 <div class="row g-4 mb-3">
-                    <div class="col-md-12 col-lg-6">
-                        <label class="form-label">{{ translate('Subscription Validity (in months)') }}</label>
-                        <input type="number" name="validity" class="form-control form-control-md" 
-                            min="1" placeholder="e.g., 1, 3, 6, 12" value="{{ old('validity') }}" required>
-                        <div class="form-text">
-                            {{ translate('Enter the validity period in months (1, 3, 6, 12, etc.)') }}
+                    @php
+                        $validityPeriods = [
+                            ['months' => 1, 'label' => '1 Month'],
+                            ['months' => 3, 'label' => '3 Months'],
+                            ['months' => 6, 'label' => '6 Months'],
+                            ['months' => 12, 'label' => '12 Months']
+                        ];
+                    @endphp
+                    @foreach($validityPeriods as $period)
+                        <div class="col-md-6 col-lg-6">
+                            <label class="form-label">{{ translate($period['label']) }} - {{ translate('Price') }}</label>
+                            @include('themes.basic.workspace.partials.input-price', [
+                                'label' => '',
+                                'id' => 'validity-' . $period['months'] . '-price',
+                                'name' => 'validity_prices[' . $period['months'] . ']',
+                                'min' => @$settings->item->minimum_price,
+                                'max' => @$settings->item->maximum_price,
+                                'required' => false,
+                            ])
+                            <div class="form-text">
+                                {{ translate('Leave empty to not offer this period') }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-12 col-lg-6">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Price'),
-                            'id' => 'regular-license-price',
-                            'name' => 'regular_license_price',
-                            'min' => @$settings->item->minimum_price,
-                            'max' => @$settings->item->maximum_price,
-                            'required' => true,
-                        ])
-                    </div>
-                    <div class="col-md-12 col-lg-6">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Buyer fee'),
-                            'value' => $category->regular_buyer_fee,
-                            'disabled' => true,
-                        ])
-                    </div>
-                    <div class="col-md-12 col-lg-6">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Purchase price'),
-                            'id' => 'regular-license-purchase-price',
-                            'value' => 0,
-                            'disabled' => true,
-                        ])
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
