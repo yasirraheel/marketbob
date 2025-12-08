@@ -256,6 +256,8 @@
         <script src="{{ theme_assets_with_version('assets/js/item.js') }}"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                const form = document.querySelector('form[action="{{ route('workspace.items.store') }}"]');
+                
                 // Add feature button
                 document.getElementById('add-feature').addEventListener('click', function() {
                     const container = document.getElementById('features-container');
@@ -274,6 +276,18 @@
                         }
                     }
                 });
+
+                // Before form submit, remove empty feature inputs
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        const featureInputs = document.querySelectorAll('input[name="features[]"]');
+                        featureInputs.forEach(function(input) {
+                            if (!input.value || input.value.trim() === '') {
+                                input.remove();
+                            }
+                        });
+                    });
+                }
             });
         </script>
     @endpush
