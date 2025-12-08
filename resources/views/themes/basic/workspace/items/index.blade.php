@@ -108,56 +108,30 @@
                                             </div>
                                         @endif
                                         @if ($item->isPurchasingEnabled())
-                                            <div class="table-price my-2">
-                                                <div
-                                                    class="row row-cols-auto align-items-center justify-content-between flex-nowrap">
-                                                    <div class="col">
-                                                        <h6 class="mb-0 text-dark small">
-                                                            {{ translate('Regular') }}
-                                                        </h6>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="item-price small">
-                                                            @if ($item->isOnDiscount())
-                                                                <span class="item-price-through small">
-                                                                    {{ getAmount($item->getRegularPrice()) }}
-                                                                </span>
-                                                                <span class="item-price-number small">
-                                                                    {{ getAmount($item->price->regular) }}
-                                                                </span>
-                                                            @else
-                                                                <span class="small text-dark">
-                                                                    {{ getAmount($item->getRegularPrice()) }}
-                                                                </span>
-                                                            @endif
+                                            @php
+                                                $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                                            @endphp
+                                            @foreach ([1, 3, 6, 12] as $period)
+                                                @if(isset($validityPrices[$period]) && $validityPrices[$period] > 0)
+                                                    <div class="table-price my-2">
+                                                        <div
+                                                            class="row row-cols-auto align-items-center justify-content-between flex-nowrap">
+                                                            <div class="col">
+                                                                <h6 class="mb-0 text-dark small">
+                                                                    {{ $period }} {{ translate($period > 1 ? 'Months' : 'Month') }}
+                                                                </h6>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="item-price small">
+                                                                    <span class="small text-dark">
+                                                                        {{ getAmount($validityPrices[$period]) }}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="table-price">
-                                                <div
-                                                    class="row row-cols-auto align-items-center justify-content-between flex-nowrap">
-                                                    <div class="col">
-                                                        <h6 class="mb-0 text-dark small">
-                                                            {{ translate('Extended') }}
-                                                        </h6>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="item-price small">
-                                                            @if ($item->isOnDiscount() && $item->isExtendedOnDiscount())
-                                                                <span class="item-price-through small">
-                                                                    {{ getAmount($item->getExtendedPrice()) }}
-                                                                </span>
-                                                                <span class="item-price-number small">
-                                                                    {{ getAmount($item->price->extended) }}
-                                                                </span>
-                                                            @else
-                                                                <span class="small text-dark">
-                                                                    {{ getAmount($item->getExtendedPrice()) }}
-                                                                </span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
+                                                @endif
+                                            @endforeach
                                                 </div>
                                             </div>
                                         @endif

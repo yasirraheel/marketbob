@@ -100,16 +100,22 @@
                         </div>
                     @else
                         <div class="item-price">
-                            @if ($item->isOnDiscount())
-                                <span class="item-price-through">
-                                    {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
-                                </span>
+                            @php
+                                $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                                $minPrice = null;
+                                foreach ($validityPrices as $price) {
+                                    if ($price > 0 && ($minPrice === null || $price < $minPrice)) {
+                                        $minPrice = $price;
+                                    }
+                                }
+                            @endphp
+                            @if ($minPrice)
                                 <span class="item-price-number">
-                                    {{ getAmount($item->price->regular, 2, '.', '', true) }}
+                                    {{ getAmount($minPrice, 2, '.', '', true) }}
                                 </span>
                             @else
                                 <span class="item-price-number">
-                                    {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
+                                    {{ translate('N/A') }}
                                 </span>
                             @endif
                         </div>
