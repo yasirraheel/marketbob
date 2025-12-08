@@ -194,7 +194,7 @@
                                                     'label' => '',
                                                     'id' => 'validity-' . $period['months'] . '-price',
                                                     'name' => 'validity_prices[' . $period['months'] . ']',
-                                                    'value' => $validityPrices[$period['months']] ?? 0,
+                                                    'value' => isset($validityPrices[$period['months']]) && $validityPrices[$period['months']] > 0 ? $validityPrices[$period['months']] : '',
                                                     'min' => @$settings->item->minimum_price,
                                                     'max' => @$settings->item->maximum_price,
                                                     'required' => false,
