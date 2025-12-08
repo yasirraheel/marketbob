@@ -153,6 +153,8 @@ class ItemController extends Controller
             'version' => ['nullable', 'regex:/^\d+\.\d+(\.\d+)*$/', 'max:100'],
             'demo_link' => ['nullable', 'url', 'block_patterns'],
             'tags' => ['required', 'block_patterns'],
+            'features' => ['nullable', 'array'],
+            'features.*' => ['nullable', 'string', 'max:255'],
             'validity_prices' => ['required', 'array'],
             'validity_prices.*' => ['nullable', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price],
             'free_item' => ['nullable', 'boolean'],
@@ -249,6 +251,7 @@ class ItemController extends Controller
             $item->version = $request->version;
             $item->demo_link = $request->demo_link;
             $item->tags = $request->tags;
+            $item->features = json_encode(array_filter($request->features ?? []));
             $item->thumbnail = $thumbnail;
             $item->preview_type = $previewType;
             $item->preview_image = $previewImage;
@@ -323,6 +326,8 @@ class ItemController extends Controller
             'version' => ['nullable', 'regex:/^\d+\.\d+(\.\d+)*$/', 'max:100'],
             'demo_link' => ['nullable', 'url', 'block_patterns'],
             'tags' => ['required', 'block_patterns'],
+            'features' => ['nullable', 'array'],
+            'features.*' => ['nullable', 'string', 'max:255'],
             'free_item' => ['nullable', 'boolean'],
             'purchasing_status' => ['nullable', 'boolean'],
             'message' => ['nullable', 'string'],
@@ -487,6 +492,7 @@ class ItemController extends Controller
             $item->version = $request->version;
             $item->demo_link = $request->demo_link;
             $item->tags = $request->tags;
+            $item->features = json_encode(array_filter($request->features ?? []));
 
             if ($thumbnail) {
                 $item->thumbnail = $thumbnail;

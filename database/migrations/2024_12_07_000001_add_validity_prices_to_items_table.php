@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::table('items', function (Blueprint $table) {
             $table->text('validity_prices')->nullable()->after('screenshots');
+            $table->text('features')->nullable()->after('tags');
         });
 
         Schema::table('item_updates', function (Blueprint $table) {
             $table->text('validity_prices')->nullable()->after('screenshots');
+            $table->text('features')->nullable()->after('tags');
         });
     }
 
@@ -26,11 +28,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dropColumn('validity_prices');
+            $table->dropColumn(['validity_prices', 'features']);
         });
 
         Schema::table('item_updates', function (Blueprint $table) {
-            $table->dropColumn('validity_prices');
+            $table->dropColumn(['validity_prices', 'features']);
         });
     }
 };

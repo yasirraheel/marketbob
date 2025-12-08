@@ -508,25 +508,19 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <div class="list mt-3">
-                                        <div class="list-item small">
-                                            <i class="fa fa-check text-primary me-1"></i>
-                                            {{ translate('Quality checked by :website_name', ['website_name' => @$settings->general->site_name]) }}
+                                    @php
+                                        $features = @json_decode($item->features ?? '[]', true) ?? [];
+                                    @endphp
+                                    @if(count($features) > 0)
+                                        <div class="list mt-3">
+                                            @foreach($features as $feature)
+                                                <div class="list-item small">
+                                                    <i class="fa fa-check text-primary me-1"></i>
+                                                    {{ $feature }}
+                                                </div>
+                                            @endforeach
                                         </div>
-                                        <div class="list-item small">
-                                            <i class="fa fa-check text-primary me-1"></i>
-                                            {{ translate('Full Documentation') }}
-                                        </div>
-                                        <div class="list-item small">
-                                            <i class="fa fa-check text-primary me-1"></i>
-                                            {{ translate('Future updates') }}
-                                        </div>
-                                        <div class="list-item small">
-                                            <i
-                                                class="fa {{ $item->isSupported() ? 'fa-check text-primary' : 'fa-times text-danger' }} me-1"></i>
-                                            {{ translate('Author Support') }}
-                                        </div>
-                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         @endif

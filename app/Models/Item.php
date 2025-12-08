@@ -304,6 +304,7 @@ class Item extends Model
         'version',
         'demo_link',
         'tags',
+        'features',
         'thumbnail',
         'preview_type',
         'preview_image',

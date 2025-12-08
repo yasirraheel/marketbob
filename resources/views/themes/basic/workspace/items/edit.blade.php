@@ -108,6 +108,33 @@
                                             {{ translate('Type your tag and click enter, maximum :maximum_tags tags.', ['maximum_tags' => @$settings->item->maximum_tags]) }}
                                         </div>
                                     </div>
+                                    <div class="col-12">
+                                        <label class="form-label">{{ translate('Features') }}</label>
+                                        <div id="features-container">
+                                            @php
+                                                $features = @json_decode($item->features ?? '[]', true) ?? [];
+                                            @endphp
+                                            @if(count($features) > 0)
+                                                @foreach($features as $feature)
+                                                    <div class="input-group mb-2 feature-item">
+                                                        <input type="text" name="features[]" class="form-control" value="{{ $feature }}" placeholder="{{ translate('e.g., Quality Checked, Full Documentation') }}">
+                                                        <button type="button" class="btn btn-outline-danger remove-feature"><i class="fa fa-times"></i></button>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="input-group mb-2 feature-item">
+                                                    <input type="text" name="features[]" class="form-control" placeholder="{{ translate('e.g., Quality Checked, Full Documentation') }}">
+                                                    <button type="button" class="btn btn-outline-danger remove-feature"><i class="fa fa-times"></i></button>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" id="add-feature">
+                                            <i class="fa fa-plus me-1"></i>{{ translate('Add Feature') }}
+                                        </button>
+                                        <div class="form-text">
+                                            {{ translate('Add features that highlight what buyers get with this subscription') }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -271,5 +298,27 @@
         <script src="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.js') }}"></script>
         <script src="{{ asset('vendor/libs/jquery/jquery.priceformat.min.js') }}"></script>
         <script src="{{ theme_assets_with_version('assets/js/item.js') }}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add feature button
+                document.getElementById('add-feature').addEventListener('click', function() {
+                    const container = document.getElementById('features-container');
+                    const newFeature = document.createElement('div');
+                    newFeature.className = 'input-group mb-2 feature-item';
+                    newFeature.innerHTML = '<input type="text" name="features[]" class="form-control" placeholder="{{ translate('e.g., Quality Checked, Full Documentation') }}"><button type="button" class="btn btn-outline-danger remove-feature"><i class="fa fa-times"></i></button>';
+                    container.appendChild(newFeature);
+                });
+
+                // Remove feature button (using event delegation)
+                document.getElementById('features-container').addEventListener('click', function(e) {
+                    if (e.target.closest('.remove-feature')) {
+                        const featureItem = e.target.closest('.feature-item');
+                        if (document.querySelectorAll('.feature-item').length > 1) {
+                            featureItem.remove();
+                        }
+                    }
+                });
+            });
+        </script>
     @endpush
 @endsection
