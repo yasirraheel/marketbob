@@ -44,7 +44,7 @@ class CartController extends Controller
         }
 
         $rules = [
-            'license_type' => ['required', 'integer', 'min:1', 'max:2'],
+            'validity_period' => ['required', 'integer', 'in:1,3,6,12'],
         ];
 
         $supportPeriodId = null;
@@ -79,7 +79,7 @@ class CartController extends Controller
 
             $cartItem = CartItem::where('user_id', $userId)
                 ->where('item_id', $item->id)
-                ->where('license_type', $request->license_type)->first();
+                ->where('validity_period', $request->validity_period)->first();
 
         } else {
             if (session()->has('session_id')) {
@@ -92,7 +92,7 @@ class CartController extends Controller
 
             $cartItem = CartItem::where('session_id', $sessionId)
                 ->where('item_id', $item->id)
-                ->where('license_type', $request->license_type)
+                ->where('validity_period', $request->validity_period)
                 ->first();
         }
 
@@ -101,7 +101,7 @@ class CartController extends Controller
             $cart->session_id = $sessionId;
             $cart->user_id = $userId;
             $cart->item_id = $item->id;
-            $cart->license_type = $request->license_type;
+            $cart->validity_period = $request->validity_period;
             $cart->support_period_id = $supportPeriodId;
             $cart->save();
         } else {
@@ -126,7 +126,7 @@ class CartController extends Controller
             ->forCurrentSession()->firstOrFail();
 
         $rules = [
-            'license_type' => ['required', 'integer', 'min:1', 'max:2'],
+            'validity_period' => ['required', 'integer', 'in:1,3,6,12'],
             'quantity' => ['required', 'integer', 'min:1', 'max:50'],
         ];
 
@@ -149,7 +149,7 @@ class CartController extends Controller
 
         $cartItemExists = CartItem::whereNot('id', $cartItem->id)
             ->where('item_id', $cartItem->item_id)
-            ->where('license_type', $request->license_type)
+            ->where('validity_period', $request->validity_period)
             ->forCurrentSession()
             ->first();
 
@@ -157,7 +157,7 @@ class CartController extends Controller
             $cartItemExists->increment('quantity', $request->quantity);
             $cartItem->delete();
         } else {
-            $cartItem->license_type = $request->license_type;
+            $cartItem->validity_period = $request->validity_period;
             $cartItem->quantity = $request->quantity;
             $cartItem->support_period_id = $supportPeriodId;
             $cartItem->update();
@@ -208,7 +208,8 @@ class CartController extends Controller
             foreach ($cartItems as $cartItem) {
                 $item = $cartItem->item;
 
-                $price = $cartItem->isLicenseTypeRegular() ? $item->price->regular : $item->price->extended;
+                $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                $price = $validityPrices[$cartItem->validity_period] ?? 0;
 
                 $support = null;
                 if (@settings('item')->support_status && $item->isSupported()) {
@@ -230,7 +231,7 @@ class CartController extends Controller
                 $transactionItem = new TransactionItem();
                 $transactionItem->transaction_id = $transaction->id;
                 $transactionItem->item_id = $item->id;
-                $transactionItem->license_type = $cartItem->license_type;
+                $transactionItem->validity_period = $cartItem->validity_period;
                 $transactionItem->price = $price;
                 $transactionItem->quantity = $cartItem->quantity;
                 $transactionItem->support = $support;

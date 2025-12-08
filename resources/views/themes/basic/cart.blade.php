@@ -84,20 +84,23 @@
                                                                 <div class="row g-2 align-items-center">
                                                                     <div class="col-auto">
                                                                         <label class="col-form-label">
-                                                                            {{ translate('License Type') }}
+                                                                            {{ translate('Validity Period') }}
                                                                         </label>
                                                                     </div>
                                                                     <div class="col-auto">
-                                                                        <select name="license_type"
+                                                                        @php
+                                                                            $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                                                                        @endphp
+                                                                        <select name="validity_period"
                                                                             class="form-select pe-5">
-                                                                            <option value="1"
-                                                                                @selected($cartItem->isLicenseTypeRegular())>
-                                                                                {{ translate('Regular') }}
-                                                                            </option>
-                                                                            <option value="2"
-                                                                                @selected($cartItem->isLicenseTypeExtended())>
-                                                                                {{ translate('Extended') }}
-                                                                            </option>
+                                                                            @foreach ([1, 3, 6, 12] as $period)
+                                                                                @if(isset($validityPrices[$period]) && $validityPrices[$period] > 0)
+                                                                                    <option value="{{ $period }}"
+                                                                                        @selected($cartItem->validity_period == $period)>
+                                                                                        {{ $period }} {{ translate($period > 1 ? 'Months' : 'Month') }}
+                                                                                    </option>
+                                                                                @endif
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -148,33 +151,14 @@
                                                 </div>
                                                 <div class="col text-end">
                                                     <div class="item-price">
-                                                        @if ($cartItem->isLicenseTypeRegular())
-                                                            @if ($item->isOnDiscount())
-                                                                <span class="item-price-through">
-                                                                    {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
-                                                                </span>
-                                                                <span class="item-price-number">
-                                                                    {{ getAmount($item->price->regular, 2, '.', '', true) }}
-                                                                </span>
-                                                            @else
-                                                                <span class="item-price-number">
-                                                                    {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
-                                                                </span>
-                                                            @endif
-                                                        @else
-                                                            @if ($item->isOnDiscount() && $item->isExtendedOnDiscount())
-                                                                <span class="item-price-through">
-                                                                    {{ getAmount($item->getExtendedPrice(), 2, '.', '', true) }}
-                                                                </span>
-                                                                <span class="item-price-number">
-                                                                    {{ getAmount($item->price->extended, 2, '.', '', true) }}
-                                                                </span>
-                                                            @else
-                                                                <span class="item-price-number">
-                                                                    {{ getAmount($item->getExtendedPrice(), 2, '.', '', true) }}
-                                                                </span>
-                                                            @endif
-                                                        @endif
+                                                        @php
+                                                            $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                                                            $selectedPeriod = $cartItem->validity_period ?? 1;
+                                                            $price = $validityPrices[$selectedPeriod] ?? 0;
+                                                        @endphp
+                                                        <span class="item-price-number">
+                                                            {{ getAmount($price, 2, '.', '', true) }}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>

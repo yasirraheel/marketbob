@@ -9,19 +9,6 @@ class CartItem extends Model
 {
     use HasFactory;
 
-    const LICENSE_TYPE_REGULAR = 1;
-    const LICENSE_TYPE_EXTENDED = 2;
-
-    public function isLicenseTypeRegular()
-    {
-        return $this->license_type == self::LICENSE_TYPE_REGULAR;
-    }
-
-    public function isLicenseTypeExtended()
-    {
-        return $this->license_type == self::LICENSE_TYPE_EXTENDED;
-    }
-
     public function scopeForCurrentSession($query)
     {
         if (authUser()) {
@@ -37,7 +24,7 @@ class CartItem extends Model
         'session_id',
         'user_id',
         'item_id',
-        'license_type',
+        'validity_period',
         'quantity',
         'support_period_id',
     ];
@@ -45,11 +32,8 @@ class CartItem extends Model
     public function getTotalAmount()
     {
         $quantity = $this->quantity;
-        if ($this->isLicenseTypeRegular()) {
-            $amount = $this->item->price->regular;
-        } else {
-            $amount = $this->item->price->extended;
-        }
+        $validityPrices = @json_decode($this->item->validity_prices ?? '{}', true) ?? [];
+        $amount = $validityPrices[$this->validity_period] ?? 0;
 
         $total = ($amount * $quantity);
 
@@ -59,11 +43,8 @@ class CartItem extends Model
     public function getTotalAmountWithSupport()
     {
         $quantity = $this->quantity;
-        if ($this->isLicenseTypeRegular()) {
-            $amount = $this->item->price->regular;
-        } else {
-            $amount = $this->item->price->extended;
-        }
+        $validityPrices = @json_decode($this->item->validity_prices ?? '{}', true) ?? [];
+        $amount = $validityPrices[$this->validity_period] ?? 0;
 
         $supportPeriod = $this->supportPeriod;
         if ($supportPeriod) {
