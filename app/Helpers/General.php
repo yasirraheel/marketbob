@@ -497,7 +497,10 @@ function defaultCurrency()
 
 function price($price)
 {
-    return number_format($price, 2);
+    if ($price === '' || $price === null) {
+        return '';
+    }
+    return number_format((float) $price, 2);
 }
 
 function amountFormat($amount, $decimals = 2, $decimalSeparator = '.', $thousandsSeparator = '', $hideNegativeDecimals = false)
