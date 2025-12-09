@@ -155,6 +155,7 @@ class ItemController extends Controller
             'tags' => ['required', 'block_patterns'],
             'features' => ['nullable', 'array'],
             'features.*' => ['nullable', 'string', 'max:255'],
+            'original_price' => ['nullable', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price],
             'validity_prices' => ['required', 'array'],
             'validity_prices.*' => ['nullable', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price],
             'free_item' => ['nullable', 'boolean'],
@@ -261,6 +262,7 @@ class ItemController extends Controller
             $item->is_main_file_external = $request->main_file_source;
             $item->screenshots = $screenshots;
             $item->validity_prices = $validityPrices;
+            $item->original_price = $request->original_price ?? null;
             $item->regular_price = 0;
             $item->extended_price = 0;
             $item->is_supported = $request->support;
@@ -328,6 +330,7 @@ class ItemController extends Controller
             'tags' => ['required', 'block_patterns'],
             'features' => ['nullable', 'array'],
             'features.*' => ['nullable', 'string', 'max:255'],
+            'original_price' => ['nullable', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price],
             'free_item' => ['nullable', 'boolean'],
             'purchasing_status' => ['nullable', 'boolean'],
             'message' => ['nullable', 'string'],
@@ -460,6 +463,7 @@ class ItemController extends Controller
 
                     $itemUpdate->screenshots = $screenshots;
                     $itemUpdate->validity_prices = $validityPrices;
+                    $itemUpdate->original_price = $request->original_price ?? null;
                     $itemUpdate->regular_price = 0;
                     $itemUpdate->extended_price = 0;
                     $itemUpdate->is_supported = $request->support;
@@ -524,6 +528,7 @@ class ItemController extends Controller
             }
 
             $item->validity_prices = $validityPrices;
+            $item->original_price = $request->original_price ?? null;
             $item->regular_price = 0;
             $item->extended_price = 0;
             $item->is_supported = $request->support;
