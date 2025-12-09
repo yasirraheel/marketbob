@@ -154,6 +154,25 @@
             </div>
             <div class="card-v-body p-4">
                 <div class="row g-4 mb-3">
+                    <div class="col-md-12 col-lg-6">
+                        <label class="form-label">{{ translate('Original Price') }}</label>
+                        @include('themes.basic.workspace.partials.input-price', [
+                            'label' => '',
+                            'id' => 'original_price',
+                            'name' => 'original_price',
+                            'value' => old('original_price'),
+                            'min' => @$settings->item->minimum_price,
+                            'max' => @$settings->item->maximum_price,
+                            'required' => false,
+                        ])
+                        <div class="form-text">
+                            {{ translate('This will be shown as strike-through price to show discount') }}
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4">
+                <h6 class="mb-3">{{ translate('Validity Period Pricing') }}</h6>
+                <div class="row g-4 mb-3">
                     @php
                         $validityPeriods = [
                             ['months' => 1, 'label' => '1 Month'],

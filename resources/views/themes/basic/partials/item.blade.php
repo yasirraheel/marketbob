@@ -57,16 +57,58 @@
                 <i class="fa-regular fa-heart me-1"></i>
                 {{ translate('Free') }}
             </div>
-        @elseif ($item->isOnDiscount())
-            <div class="item-badge item-badge-sale">
-                <i class="fa-solid fa-tag me-1"></i>
-                {{ translate('On Sale') }}
-            </div>
-        @elseif ($item->isTrending())
-            <div class="item-badge item-badge-trending">
-                <i class="fa-solid fa-bolt me-1"></i>
-                {{ translate('Trending') }}
-            </div>
+        @else
+            @php
+                // Calculate discount for badge
+                $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                $minPrice = null;
+                foreach ($validityPrices as $price) {
+                    $priceValue = is_numeric($price) ? (float)$price : 0;
+                    if ($priceValue > 0 && ($minPrice === null || $priceValue < $minPrice)) {
+                        $minPrice = $priceValue;
+                    }
+                }
+                if ($minPrice === null && $item->regular_price > 0) {
+                    $minPrice = $item->regular_price;
+                }
+                
+                $originalPrice = $item->original_price ?? 0;
+                $showDiscount = false;
+                $discountPercent = 0;
+                if ($originalPrice > 0 && $minPrice > 0 && $minPrice < $originalPrice) {
+                    $showDiscount = true;
+                    $discountPercent = round((($originalPrice - $minPrice) / $originalPrice) * 100);
+                }
+            @endphp
+            @if ($showDiscount)
+                <div class="item-badge item-badge-sale">
+                    <i class="fa-solid fa-tag me-1"></i>
+                    {{ $discountPercent }}% OFF
+                </div>
+            @elseif ($item->isOnDiscount())
+                <div class="item-badge item-badge-sale">
+                    <i class="fa-solid fa-tag me-1"></i>
+                    {{ translate('On Sale') }}
+                </div>
+            @elseif ($item->isTrending())
+                <div class="item-badge item-badge-trending">
+                    <i class="fa-solid fa-bolt me-1"></i>
+                    {{ translate('Trending') }}
+                </div>
+            @endif
+        @endif
+        @if (!($item->isPremium() || $item->isFree() || ($originalPrice > 0 && $minPrice > 0 && $minPrice < $originalPrice)))
+            @if ($item->isOnDiscount())
+                <div class="item-badge item-badge-sale">
+                    <i class="fa-solid fa-tag me-1"></i>
+                    {{ translate('On Sale') }}
+                </div>
+            @elseif ($item->isTrending())
+                <div class="item-badge item-badge-trending">
+                    <i class="fa-solid fa-bolt me-1"></i>
+                    {{ translate('Trending') }}
+                </div>
+            @endif
         @endif
     </div>
     <div class="item-body">
@@ -117,8 +159,20 @@
                                 if ($minPrice === null && $item->regular_price > 0) {
                                     $minPrice = $item->regular_price;
                                 }
+                                
+                                // Calculate discount if original_price is set
+                                $originalPrice = $item->original_price ?? 0;
+                                $discountPercent = 0;
+                                if ($originalPrice > 0 && $minPrice > 0 && $minPrice < $originalPrice) {
+                                    $discountPercent = round((($originalPrice - $minPrice) / $originalPrice) * 100);
+                                }
                             @endphp
                             @if ($minPrice)
+                                @if ($originalPrice > 0 && $minPrice < $originalPrice)
+                                    <span class="item-price-through">
+                                        {{ getAmount($originalPrice, 2, '.', '', true) }}
+                                    </span>
+                                @endif
                                 <span class="item-price-number">
                                     {{ getAmount($minPrice, 2, '.', '', true) }}
                                 </span>
