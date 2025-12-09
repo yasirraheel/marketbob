@@ -30,7 +30,7 @@
     </div>
     @if ($items->count() > 0)
         <div class="items">
-            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5 g-3 items-grid-mobile">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5 g-3 items-grid-mobile">
                 @foreach ($items as $item)
                     <div class="col w-100">
                         @include('themes.basic.partials.item', [

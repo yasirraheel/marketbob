@@ -35,7 +35,7 @@
                     <div class="tab-pane fade show active" id="pills-all" role="tabpanel"
                         aria-labelledby="pills-all-tab">
                         @if ($latestItems->count() > 0)
-                            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5 g-3 items-grid-mobile">
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5 g-3 items-grid-mobile">
                                 @foreach ($latestItems as $item)
                                     <div class="col">
                                         @include('themes.basic.partials.item', ['item' => $item])
@@ -63,7 +63,7 @@
                             aria-labelledby="pills-{{ $category->slug }}-tab">
                             @if ($category->items->count() > 0)
                                 <div
-                                    class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5 justify-content-center g-3 items-grid-mobile">
+                                    class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5 justify-content-center g-3 items-grid-mobile">
                                     @foreach ($category->items as $item)
                                         <div class="col">
                                             @include('themes.basic.partials.item', ['item' => $item])
