@@ -27,6 +27,11 @@ class TransactionItem extends Model
         'support' => 'object',
     ];
 
+    public function isLicenseTypeRegular()
+    {
+        return $this->license_type == 1;
+    }
+
     public function getTotalAmount()
     {
         $quantity = $this->quantity;
