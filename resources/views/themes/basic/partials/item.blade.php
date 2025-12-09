@@ -103,10 +103,19 @@
                             @php
                                 $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
                                 $minPrice = null;
+                                
+                                // Find minimum price from validity prices
                                 foreach ($validityPrices as $price) {
-                                    if ($price > 0 && ($minPrice === null || $price < $minPrice)) {
-                                        $minPrice = $price;
+                                    // Convert to float and check if valid
+                                    $priceValue = is_numeric($price) ? (float)$price : 0;
+                                    if ($priceValue > 0 && ($minPrice === null || $priceValue < $minPrice)) {
+                                        $minPrice = $priceValue;
                                     }
+                                }
+                                
+                                // Fallback to regular_price if no validity prices set
+                                if ($minPrice === null && $item->regular_price > 0) {
+                                    $minPrice = $item->regular_price;
                                 }
                             @endphp
                             @if ($minPrice)
