@@ -5,7 +5,6 @@
                 <div class="col">
                     @include('themes.basic.partials.item', [
                         'item' => $item,
-                        'item_classes' => 'border',
                     ])
                 </div>
             @endforeach

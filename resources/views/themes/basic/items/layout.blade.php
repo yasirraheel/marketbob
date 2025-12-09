@@ -746,7 +746,6 @@
                             <div class="col">
                                 @include('themes.basic.partials.item', [
                                     'item' => $authorItem,
-                                    'item_classes' => 'border',
                                 ])
                             </div>
                         @endforeach
@@ -788,7 +787,6 @@
                             <div class="col">
                                 @include('themes.basic.partials.item', [
                                     'item' => $similarItem,
-                                    'item_classes' => 'border',
                                 ])
                             </div>
                         @endforeach

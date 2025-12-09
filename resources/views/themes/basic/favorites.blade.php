@@ -33,7 +33,6 @@
                             <div class="col">
                                 @include('themes.basic.partials.item', [
                                     'item' => $favorite->item,
-                                    'item_classes' => 'border',
                                 ])
                             </div>
                         @endforeach

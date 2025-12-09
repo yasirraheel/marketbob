@@ -35,7 +35,7 @@
                     <div class="col w-100">
                         @include('themes.basic.partials.item', [
                             'item' => $item,
-                            'item_classes' => 'border item-inline',
+                            'item_classes' => 'item-inline',
                         ])
                     </div>
                 @endforeach
