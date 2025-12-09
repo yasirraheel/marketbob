@@ -27,6 +27,12 @@ class TransactionItem extends Model
         'support' => 'object',
     ];
 
+    public function getValidityPeriodLabel()
+    {
+        $months = $this->validity_period ?? 1;
+        return $months . ' ' . ($months > 1 ? translate('Months') : translate('Month'));
+    }
+
     public function getTotalAmount()
     {
         $quantity = $this->quantity;

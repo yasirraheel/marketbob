@@ -130,9 +130,9 @@
                                 <div class="row g-3 row-cols-auto">
                                     <div class="col">
                                         <div class="small">
-                                            <span>{{ translate('License') }}:</span>
+                                            <span>{{ translate('Validity') }}:</span>
                                             <span class="text-muted">
-                                                {{ $trxItem->isLicenseTypeRegular() ? translate('Regular') : translate('Extended') }}
+                                                {{ $trxItem->getValidityPeriodLabel() }}
                                             </span>
                                         </div>
                                     </div>
