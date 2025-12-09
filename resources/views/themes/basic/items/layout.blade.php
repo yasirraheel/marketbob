@@ -717,7 +717,7 @@
                     </div>
                 </div>
                 <div class="section-body">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5 g-3 items-grid-mobile">
                         @foreach ($authorItems as $authorItem)
                             <div class="col">
                                 @include('themes.basic.partials.item', [
@@ -759,7 +759,7 @@
                     </div>
                 </div>
                 <div class="section-body">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5 g-3 items-grid-mobile">
                         @foreach ($similarItems as $similarItem)
                             <div class="col">
                                 @include('themes.basic.partials.item', [

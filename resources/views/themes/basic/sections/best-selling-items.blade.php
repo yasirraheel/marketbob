@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xxl-4 g-3">
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5 g-3 items-grid-mobile">
                     @foreach ($bestSellingItems as $bestSellingItem)
                         <div class="col" data-aos="fade-up" data-aos-duration="1000">
                             @include('themes.basic.partials.item', ['item' => $bestSellingItem])
