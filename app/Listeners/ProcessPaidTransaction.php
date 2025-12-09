@@ -40,7 +40,8 @@ class ProcessPaidTransaction
             $item = $trxItem->item;
             $author = $item->author;
 
-            $buyerFee = $trxItem->isLicenseTypeRegular() ? $item->category->regular_buyer_fee : $item->category->extended_buyer_fee;
+            // Use regular buyer fee for validity period based purchases
+            $buyerFee = $item->category->regular_buyer_fee;
 
             $amountWithoutBuyerFee = $buyerFee > 0 ? ($trxItem->price - $buyerFee) : $trxItem->price;
             $authorFeesPercentage = $author->level->fees;
@@ -64,7 +65,7 @@ class ProcessPaidTransaction
                 $sale->author_id = $author->id;
                 $sale->user_id = $user->id;
                 $sale->item_id = $item->id;
-                $sale->license_type = $trxItem->license_type;
+                $sale->license_type = Sale::LICENSE_TYPE_REGULAR;
                 $sale->price = $trxItem->price;
                 $sale->buyer_fee = $buyerFee;
                 if ($trx->hasTax()) {
