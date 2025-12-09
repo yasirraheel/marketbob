@@ -27,19 +27,11 @@ class TransactionItem extends Model
         'support' => 'object',
     ];
 
-    public function isLicenseTypeRegular()
-    {
-        return $this->license_type == 1;
-    }
-
     public function getTotalAmount()
     {
         $quantity = $this->quantity;
-        if ($this->isLicenseTypeRegular()) {
-            $amount = $this->item->price->regular;
-        } else {
-            $amount = $this->item->price->extended;
-        }
+        $validityPrices = @json_decode($this->item->validity_prices ?? '{}', true) ?? [];
+        $amount = $validityPrices[$this->validity_period] ?? 0;
 
         $total = ($amount * $quantity);
 
