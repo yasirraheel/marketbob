@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ translate('License Certificate for :item_name', ['item_name' => $purchase->item->name]) }}</title>
+    <title>{{ translate('Purchase Certificate for :item_name', ['item_name' => $purchase->item->name]) }}</title>
     <link rel="icon" href="{{ asset($themeSettings->general->favicon) }}">
     @include('themes.basic.includes.styles')
 </head>
@@ -38,14 +38,14 @@
                         <img src="{{ asset($themeSettings->general->logo_dark) }}"
                             alt="{{ @$settings->general->site_name }}" class="mb-2" height="40px">
                     </div>
-                    <h1 class="mb-3">{{ translate('License Certificate') }}</h1>
+                    <h1 class="mb-3">{{ translate('Purchase Certificate') }}</h1>
                     <div class="mb-3">
                         <p class="mb-0">
-                            {{ translate('This document certifies the purchase of the following license:') }}
-                            <strong>{{ strtoupper($purchase->isLicenseTypeRegular() ? translate('Regular License') : translate('Extended License')) }}</strong>.
+                            {{ translate('This document certifies your purchase of the following item:') }}
+                            <strong>{{ strtoupper($purchase->item->name) }}</strong>.
                         </p>
                         <p class="mb-0">
-                            {{ translate('Details of the license can be accessed from your workspace purchases page.') }}
+                            {{ translate('Details of your purchase can be accessed from your workspace purchases page.') }}
                         </p>
                     </div>
                 </div>

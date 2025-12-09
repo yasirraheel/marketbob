@@ -22,11 +22,10 @@
                             <tr>
                                 <th>{{ translate('ID') }}</th>
                                 <th>{{ translate('Details') }}</th>
-                                <th class="text-center">{{ translate('License Type') }}</th>
-                                @if (@$settings->item->support_status)
-                                    <th class="text-center">{{ translate('Support Expiry Date') }}</th>
-                                @endif
                                 <th class="text-center">{{ translate('Purchase Date') }}</th>
+                                @if (@$settings->item->support_status)
+                                    <th class="text-center">{{ translate('Expiry Date') }}</th>
+                                @endif
                                 <th class="text-center">{{ translate('Action') }}</th>
                             </tr>
                         </thead>
@@ -72,15 +71,7 @@
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        @if ($purchase->isLicenseTypeRegular())
-                                            <div class="badge bg-gray rounded-2 fw-light px-3 py-2">
-                                                {{ translate('Regular') }}
-                                            </div>
-                                        @else
-                                            <div class="badge bg-primary rounded-2 fw-light px-3 py-2">
-                                                {{ translate('Extended') }}
-                                            </div>
-                                        @endif
+                                        {{ dateFormat($purchase->created_at) }}
                                     </td>
                                     @if (@$settings->item->support_status)
                                         <td class="text-center">
@@ -109,9 +100,6 @@
                                             @endif
                                         </td>
                                     @endif
-                                    <td class="text-center">
-                                        {{ dateFormat($purchase->created_at) }}
-                                    </td>
                                     <td class="text-center">
                                         @if ($item->isDeleted())
                                             <span class="badge bg-danger rounded-2 fw-light px-3 py-2">
