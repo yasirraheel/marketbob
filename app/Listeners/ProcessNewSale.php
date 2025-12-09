@@ -9,6 +9,7 @@ use App\Models\Purchase;
 use App\Models\ReferralEarning;
 use App\Models\Statement;
 use Str;
+use Carbon\Carbon;
 
 class ProcessNewSale
 {
@@ -28,6 +29,8 @@ class ProcessNewSale
         $purchase->sale_id = $sale->id;
         $purchase->item_id = $item->id;
         $purchase->license_type = $sale->license_type;
+        $purchase->validity_period = $sale->validity_period ?? 1;
+        $purchase->validity_expiry_at = Carbon::now()->addMonths($purchase->validity_period);
         $purchase->code = Str::uuid()->toString();
         $purchase->save();
 

@@ -23,9 +23,7 @@
                                 <th>{{ translate('ID') }}</th>
                                 <th>{{ translate('Details') }}</th>
                                 <th class="text-center">{{ translate('Purchase Date') }}</th>
-                                @if (@$settings->item->support_status)
-                                    <th class="text-center">{{ translate('Expiry Date') }}</th>
-                                @endif
+                                <th class="text-center">{{ translate('Expiry Date') }}</th>
                                 <th class="text-center">{{ translate('Action') }}</th>
                             </tr>
                         </thead>
@@ -73,8 +71,14 @@
                                     <td class="text-center">
                                         {{ dateFormat($purchase->created_at) }}
                                     </td>
-                                    @if (@$settings->item->support_status)
-                                        <td class="text-center">
+                                    <td class="text-center">
+                                        @php
+                                            $validityExpired = $purchase->validity_expiry_at ? now()->gt($purchase->validity_expiry_at) : false;
+                                        @endphp
+                                        @if ($purchase->validity_expiry_at)
+                                            <div class="{{ $validityExpired ? 'text-danger' : '' }}">
+                                                {{ dateFormat($purchase->validity_expiry_at) }}</div>
+                                        @elseif (@$settings->item->support_status)
                                             @if ($purchase->support_expiry_at)
                                                 <div class="{{ $purchase->isSupportExpired() ? 'text-danger' : '' }}">
                                                     {{ dateFormat($purchase->support_expiry_at) }}</div>
@@ -98,8 +102,10 @@
                                                     <span>--</span>
                                                 @endif
                                             @endif
-                                        </td>
-                                    @endif
+                                        @else
+                                            <span>--</span>
+                                        @endif
+                                    </td>
                                     <td class="text-center">
                                         @if ($item->isDeleted())
                                             <span class="badge bg-danger rounded-2 fw-light px-3 py-2">
@@ -159,7 +165,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="5" class="text-center">
                                         <div class="text-muted p-4">{{ translate('No data found') }}</div>
                                     </td>
                                 </tr>

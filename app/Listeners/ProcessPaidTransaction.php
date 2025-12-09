@@ -66,6 +66,7 @@ class ProcessPaidTransaction
                 $sale->user_id = $user->id;
                 $sale->item_id = $item->id;
                 $sale->license_type = Sale::LICENSE_TYPE_REGULAR;
+                $sale->validity_period = $trxItem->validity_period ?? 1;
                 $sale->price = $trxItem->price;
                 $sale->buyer_fee = $buyerFee;
                 if ($trx->hasTax()) {

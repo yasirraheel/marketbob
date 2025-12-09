@@ -64,6 +64,11 @@
                     <p class="mb-0"><strong>{{ translate('Purchase Date:') }}</strong>
                         {{ dateFormat($purchase->created_at) }}
                     </p>
+                    @if($purchase->validity_expiry_at)
+                        <p class="mb-0"><strong>{{ translate('Access Expires:') }}</strong>
+                            {{ dateFormat($purchase->validity_expiry_at) }}
+                        </p>
+                    @endif
                 </div>
                 <div class="mb-4">
                     @if (@$settings->actions->contact_page)
