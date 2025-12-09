@@ -406,10 +406,19 @@
                                             $validityPeriods = [1, 3, 6, 12];
                                             $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
                                             $availablePeriods = [];
+                                            
                                             foreach($validityPeriods as $period) {
-                                                if(isset($validityPrices[$period]) && $validityPrices[$period] > 0) {
-                                                    $availablePeriods[] = ['months' => $period, 'price' => $validityPrices[$period]];
+                                                if(isset($validityPrices[$period])) {
+                                                    $priceValue = is_numeric($validityPrices[$period]) ? (float)$validityPrices[$period] : 0;
+                                                    if($priceValue > 0) {
+                                                        $availablePeriods[] = ['months' => $period, 'price' => $priceValue];
+                                                    }
                                                 }
+                                            }
+                                            
+                                            // Fallback to regular_price if no validity prices
+                                            if(empty($availablePeriods) && $item->regular_price > 0) {
+                                                $availablePeriods[] = ['months' => 1, 'price' => $item->regular_price];
                                             }
                                         @endphp
                                         @if(count($availablePeriods) > 1)
@@ -448,6 +457,11 @@
                                                 </div>
                                             </div>
                                             <input type="hidden" name="validity_period" value="{{ $availablePeriods[0]['months'] }}">
+                                        @else
+                                            <div class="alert alert-info mb-4">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                {{ translate('No pricing available for this item') }}
+                                            </div>
                                         @endif
                                         @if (@$settings->item->support_status)
                                             @if ($item->isSupported())
@@ -476,7 +490,14 @@
                                                                         </div>
                                                                         <div class="col-auto">
                                                                             <strong class="regular-support">
-                                                                                {{ $supportPeriod->isFree() ? translate('Free') : getAmount(($item->price->regular * $supportPeriod->percentage) / 100) }}
+                                                                                @if($supportPeriod->isFree())
+                                                                                    {{ translate('Free') }}
+                                                                                @else
+                                                                                    @php
+                                                                                        $basePrice = !empty($availablePeriods) ? $availablePeriods[0]['price'] : ($item->regular_price ?? 0);
+                                                                                    @endphp
+                                                                                    {{ getAmount(($basePrice * $supportPeriod->percentage) / 100) }}
+                                                                                @endif
                                                                             </strong>
                                                                         </div>
                                                                     </div>
@@ -498,6 +519,9 @@
                                             @csrf
                                             <input type="hidden" name="item_id" value="{{ $item->id }}">
                                             <input type="hidden" name="license_type" value="1">
+                                            @if(!empty($availablePeriods))
+                                                <input type="hidden" name="validity_period" value="{{ $availablePeriods[0]['months'] }}">
+                                            @endif
                                             @if (@$settings->item->support_status && defaultSupportPeriod() && $item->isSupported())
                                                 <input type="hidden" name="support"
                                                     value="{{ defaultSupportPeriod()->id }}">
