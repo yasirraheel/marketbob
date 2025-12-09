@@ -518,9 +518,10 @@
                                             class="buy-now-form" method="POST">
                                             @csrf
                                             <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                            <input type="hidden" name="license_type" value="1">
                                             @if(!empty($availablePeriods))
                                                 <input type="hidden" name="validity_period" value="{{ $availablePeriods[0]['months'] }}">
+                                            @else
+                                                <input type="hidden" name="validity_period" value="1">
                                             @endif
                                             @if (@$settings->item->support_status && defaultSupportPeriod() && $item->isSupported())
                                                 <input type="hidden" name="support"

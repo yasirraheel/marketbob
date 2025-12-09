@@ -45,7 +45,7 @@ class ItemController extends Controller
             ->approved()->purchasingEnabled()->firstOrFail();
 
         $rules = [
-            'license_type' => ['required', 'integer', 'min:1', 'max:2'],
+            'validity_period' => ['required', 'integer', 'in:1,3,6,12'],
         ];
 
         $supportPeriod = null;
@@ -62,9 +62,11 @@ class ItemController extends Controller
             }
         }
 
-        $price = $item->price->regular;
-        if ($request->license_type == 2) {
-            $price = $item->price->extended;
+        $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+        $price = $validityPrices[$request->validity_period] ?? 0;
+
+        if ($price <= 0) {
+            return response()->json(['error' => translate('Invalid validity period selected')]);
         }
 
         $transactionTotalAmount = $price;
@@ -95,7 +97,7 @@ class ItemController extends Controller
         $transactionItem = new TransactionItem();
         $transactionItem->transaction_id = $transaction->id;
         $transactionItem->item_id = $item->id;
-        $transactionItem->license_type = $request->license_type;
+        $transactionItem->validity_period = $request->validity_period;
         $transactionItem->price = $price;
         $transactionItem->support = $support;
         $transactionItem->total = $price;
