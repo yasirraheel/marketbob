@@ -1,7 +1,9 @@
 @php
+    $metaTitle = $item->name;
     $metaDescription = '';
+    $priceInfo = '';
     
-    // Add pricing info to meta description
+    // Add pricing info to meta description and title
     if (!$item->isFree()) {
         $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
         $minPrice = null;
@@ -26,9 +28,12 @@
         if ($minPrice > 0) {
             if ($originalPrice > 0 && $minPrice < $originalPrice) {
                 $discountPercent = round((($originalPrice - $minPrice) / $originalPrice) * 100);
+                $priceInfo = $discountPercent . '% OFF';
                 $metaDescription .= $discountPercent . '% OFF - Was ' . getAmount($originalPrice, 2, '.', '', true) . ', Now ' . getAmount($minPrice, 2, '.', '', true) . '. ';
+                $metaTitle = $item->name . ' (' . $discountPercent . '% OFF - ' . getAmount($minPrice, 2, '.', '', true) . ')';
             } else {
                 $metaDescription .= 'Price: ' . getAmount($minPrice, 2, '.', '', true) . '. ';
+                $metaTitle = $item->name . ' - ' . getAmount($minPrice, 2, '.', '', true);
             }
             
             if (!empty($availablePeriods)) {
@@ -44,13 +49,14 @@
         }
     } else {
         $metaDescription .= 'FREE Download. ';
+        $metaTitle = $item->name . ' - FREE';
     }
     
     // Add description
     $metaDescription .= shorterText(strip_tags($item->description), 160 - strlen($metaDescription));
 @endphp
 @extends('themes.basic.items.layout')
-@section('title', $item->name)
+@section('title', $metaTitle)
 @section('breadcrumbs', Breadcrumbs::render('items.view', $item))
 @section('breadcrumbs_schema', Breadcrumbs::view('breadcrumbs::json-ld', 'items.view', $item))
 @section('og_image', $item->getPreviewImageLink() ?: $item->getImageLink())
