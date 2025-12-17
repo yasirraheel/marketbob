@@ -1,7 +1,7 @@
-<div class="item item-card-modern {{ $item_classes ?? '' }}">
+<div class="item {{ $item_classes ?? '' }}">
     <div class="item-header">
         @if ($item->isPreviewFileTypeImage())
-            <a href="{{ $item->getLink() }}" class="item-image-link">
+            <a href="{{ $item->getLink() }}">
                 <img class="item-img" src="{{ $item->getPreviewImageLink() }}" alt="{{ $item->name }}" />
             </a>
         @elseif($item->isPreviewFileTypeVideo())
@@ -47,67 +47,78 @@
                 </div>
             </div>
         @endif
-        <div class="item-badges-container">
-            @if (licenseType(2) && @$settings->premium->status && $item->isPremium())
-                <span class="item-badge-tag item-badge-premium">
-                    <i class="fa-solid fa-crown me-1"></i>{{ translate('Premium') }}
-                </span>
-            @elseif ($item->isFree())
-                <span class="item-badge-tag item-badge-free">
-                    <i class="fa-regular fa-heart me-1"></i>{{ translate('Free') }}
-                </span>
-            @else
-                @php
-                    // Calculate discount for badge
-                    $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
-                    $minPrice = null;
-                    foreach ($validityPrices as $price) {
-                        $priceValue = is_numeric($price) ? (float)$price : 0;
-                        if ($priceValue > 0 && ($minPrice === null || $priceValue < $minPrice)) {
-                            $minPrice = $priceValue;
-                        }
+        @if (licenseType(2) && @$settings->premium->status && $item->isPremium())
+            <div class="item-badge item-badge-premium">
+                <i class="fa-solid fa-crown me-1"></i>
+                {{ translate('Premium') }}
+            </div>
+        @elseif ($item->isFree())
+            <div class="item-badge item-badge-free">
+                <i class="fa-regular fa-heart me-1"></i>
+                {{ translate('Free') }}
+            </div>
+        @else
+            @php
+                // Calculate discount for badge
+                $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                $minPrice = null;
+                foreach ($validityPrices as $price) {
+                    $priceValue = is_numeric($price) ? (float)$price : 0;
+                    if ($priceValue > 0 && ($minPrice === null || $priceValue < $minPrice)) {
+                        $minPrice = $priceValue;
                     }
-                    if ($minPrice === null && $item->regular_price > 0) {
-                        $minPrice = $item->regular_price;
-                    }
-                    
-                    $originalPrice = $item->original_price ?? 0;
-                    $showDiscount = false;
-                    $discountPercent = 0;
-                    if ($originalPrice > 0 && $minPrice > 0 && $minPrice < $originalPrice) {
-                        $showDiscount = true;
-                        $discountPercent = round((($originalPrice - $minPrice) / $originalPrice) * 100);
-                    }
-                @endphp
-                @if ($item->isTrending())
-                    <span class="item-badge-tag item-badge-hot">HOT</span>
-                @endif
-                @if ($showDiscount)
-                    <span class="item-badge-tag item-badge-discount">{{ $discountPercent }}%</span>
-                @elseif ($item->isOnDiscount())
-                    <span class="item-badge-tag item-badge-discount">{{ translate('SALE') }}</span>
-                @endif
-                <span class="item-badge-tag item-badge-private">{{ translate('Private') }}</span>
+                }
+                if ($minPrice === null && $item->regular_price > 0) {
+                    $minPrice = $item->regular_price;
+                }
+                
+                $originalPrice = $item->original_price ?? 0;
+                $showDiscount = false;
+                $discountPercent = 0;
+                if ($originalPrice > 0 && $minPrice > 0 && $minPrice < $originalPrice) {
+                    $showDiscount = true;
+                    $discountPercent = round((($originalPrice - $minPrice) / $originalPrice) * 100);
+                }
+            @endphp
+            @if ($showDiscount)
+                <div class="item-badge item-badge-sale">
+                    <i class="fa-solid fa-tag me-1"></i>
+                    {{ $discountPercent }}% OFF
+                </div>
+            @elseif ($item->isOnDiscount())
+                <div class="item-badge item-badge-sale">
+                    <i class="fa-solid fa-tag me-1"></i>
+                    {{ translate('On Sale') }}
+                </div>
+            @elseif ($item->isTrending())
+                <div class="item-badge item-badge-trending">
+                    <i class="fa-solid fa-bolt me-1"></i>
+                    {{ translate('Trending') }}
+                </div>
             @endif
-        </div>
-    </div>
+        @endif
+        @if (!($item->isPremium() || $item->isFree() || ($originalPrice > 0 && $minPrice > 0 && $minPrice < $originalPrice)))
+            @if ($item->isOnDiscount())
+                <div class="item-badge item-badge-sale">
+                    <i class="fa-solid fa-tag me-1"></i>
+                    {{ translate('On Sale') }}
+                </div>
+            @elseif ($item->isTrending())
+                <div class="item-badge item-badge-trending">
+                    <i class="fa-solid fa-bolt me-1"></i>
+                    {{ translate('Trending') }}
+                </div>
+            @endif
+        @endif
     </div>
     <div class="item-body">
         <a class="item-title" href="{{ $item->getLink() }}">{{ $item->name }}</a>
-        
-        @if ($item->description)
-            <p class="item-description">
-                {{ Str::limit(strip_tags($item->description), 100) }}
-            </p>
-        @else
-            <p class="item-text">
-                {!! translate('By :username in :category', [
-                    'username' => "<a href={$item->author->getProfileLink()}>{$item->author->username}</a>",
-                    'category' => "<a href={$item->category->getLink()}>{$item->category->name}</a>",
-                ]) !!}
-            </p>
-        @endif
-        
+        <p class="item-text">
+            {!! translate('By :username in :category', [
+                'username' => "<a href={$item->author->getProfileLink()}>{$item->author->username}</a>",
+                'category' => "<a href={$item->category->getLink()}>{$item->category->name}</a>",
+            ]) !!}
+        </p>
         @if ($settings->item->reviews_status && $item->hasReviews())
             <div class="item-ratings">
                 <div class="row row-cols-auto align-items-center g-2">
@@ -122,7 +133,6 @@
                 </div>
             </div>
         @endif
-        
         <div class="item-purchase">
             <div class="row row-cols-auto align-items-center justify-content-between g-3">
                 <div class="col">
