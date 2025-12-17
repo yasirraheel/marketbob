@@ -118,6 +118,10 @@ Route::name('admin.')->group(function () {
                     Route::delete('{itemUpdate}', 'ItemUpdatedController@destroy')->name('destroy');
                 });
                 Route::get('/', 'ItemController@index')->name('index');
+                Route::get('create', 'ItemController@create')->name('create');
+                Route::post('store', 'ItemController@store')->name('store');
+                Route::get('{id}/edit', 'ItemController@edit')->name('edit');
+                Route::post('{id}/update', 'ItemController@update')->name('update');
                 Route::post('{id}/featured', 'ItemController@makeFeatured')->name('featured');
                 Route::post('{id}/featured/remove', 'ItemController@removeFeatured')->name('featured.remove');
                 Route::post('{id}/premium', 'ItemController@makePremium')->name('premium');
