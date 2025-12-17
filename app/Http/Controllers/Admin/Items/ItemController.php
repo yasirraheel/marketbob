@@ -381,6 +381,50 @@ class ItemController extends Controller
         ]);
     }
 
+    public function reviewsCreate($id)
+    {
+        $item = Item::where('id', $id)->firstOrFail();
+        $users = User::where('status', 1)->orderBy('username')->get();
+        
+        return view('admin.items.reviews-create', [
+            'item' => $item,
+            'users' => $users,
+        ]);
+    }
+
+    public function reviewsStore(Request $request, $id)
+    {
+        $item = Item::where('id', $id)->firstOrFail();
+
+        $validator = Validator::make($request->all(), [
+            'user_id' => ['required', 'exists:users,id'],
+            'stars' => ['required', 'integer', 'min:1', 'max:5'],
+            'subject' => ['required', 'string', 'max:255'],
+            'body' => ['required', 'string', 'max:5000'],
+        ]);
+
+        if ($validator->fails()) {
+            foreach ($validator->errors()->all() as $error) {
+                toastr()->error($error);
+            }
+            return back()->withInput();
+        }
+
+        $user = User::findOrFail($request->user_id);
+
+        $review = new ItemReview();
+        $review->user_id = $user->id;
+        $review->author_id = $item->author_id;
+        $review->item_id = $item->id;
+        $review->stars = $request->stars;
+        $review->subject = $request->subject;
+        $review->body = $request->body;
+        $review->save();
+
+        toastr()->success(translate('Review added successfully'));
+        return redirect()->route('admin.items.reviews', $item->id);
+    }
+
     public function reviewsDelete($id, $review_id)
     {
         $item = Item::where('id', $id)->firstOrFail();

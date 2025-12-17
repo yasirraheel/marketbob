@@ -8,21 +8,30 @@
         <div class="dashboard-tabs-content">
             <div class="card">
                 <div class="card-header p-3 border-bottom-small">
-                    <form action="{{ request()->url() }}" method="GET">
-                        <div class="row g-3">
-                            <div class="col-12 col-lg-10">
-                                <input type="text" name="search" class="form-control"
-                                    placeholder="{{ translate('Search...') }}" value="{{ request('search') ?? '' }}">
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
-                            </div>
-                            <div class="col">
-                                <a href="{{ url()->current() }}"
-                                    class="btn btn-secondary w-100">{{ translate('Reset') }}</a>
-                            </div>
+                    <div class="row g-3 align-items-center">
+                        <div class="col">
+                            <form action="{{ request()->url() }}" method="GET">
+                                <div class="row g-3">
+                                    <div class="col-12 col-lg-8">
+                                        <input type="text" name="search" class="form-control"
+                                            placeholder="{{ translate('Search...') }}" value="{{ request('search') ?? '' }}">
+                                    </div>
+                                    <div class="col">
+                                        <button class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
+                                    </div>
+                                    <div class="col">
+                                        <a href="{{ url()->current() }}"
+                                            class="btn btn-secondary w-100">{{ translate('Reset') }}</a>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                        <div class="col-auto ms-auto">
+                            <a href="{{ route('admin.items.reviews.create', $item->id) }}" class="btn btn-primary">
+                                <i class="fa fa-plus me-2"></i>{{ translate('Add Review') }}
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     @if ($reviews->count() > 0)

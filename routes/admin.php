@@ -135,6 +135,8 @@ Route::name('admin.')->group(function () {
                 Route::post('{id}/status', 'ItemController@statusUpdate');
                 Route::get('{id}/statistics', 'ItemController@statistics')->name('statistics');
                 Route::get('{id}/reviews', 'ItemController@reviews')->name('reviews');
+                Route::get('{id}/reviews/create', 'ItemController@reviewsCreate')->name('reviews.create');
+                Route::post('{id}/reviews', 'ItemController@reviewsStore')->name('reviews.store');
                 Route::delete('{id}/reviews/{review_id}', 'ItemController@reviewsDelete')->name('reviews.delete');
                 Route::get('{id}/comments', 'ItemController@comments')->name('comments');
                 Route::delete('{id}/comments/{comment_id}', 'ItemController@commentsDelete')->name('comments.delete');
