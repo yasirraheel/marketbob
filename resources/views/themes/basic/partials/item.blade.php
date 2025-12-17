@@ -136,13 +136,22 @@
         @if (!$item->isFree())
             @php
                 $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                $availablePeriods = [];
                 if (!empty($validityPrices)) {
-                    $periods = array_keys($validityPrices);
-                    $minPeriod = !empty($periods) ? min($periods) : null;
-                    $maxPeriod = !empty($periods) ? max($periods) : null;
+                    foreach ($validityPrices as $period => $price) {
+                        $priceValue = is_numeric($price) ? (float)$price : 0;
+                        if ($priceValue > 0) {
+                            $availablePeriods[] = (int)$period;
+                        }
+                    }
+                }
+                if (!empty($availablePeriods)) {
+                    sort($availablePeriods);
+                    $minPeriod = min($availablePeriods);
+                    $maxPeriod = max($availablePeriods);
                 }
             @endphp
-            @if (!empty($validityPrices) && isset($minPeriod) && isset($maxPeriod))
+            @if (!empty($availablePeriods))
                 <div class="item-validity mt-2">
                     <span class="text-muted small">
                         <i class="fa-regular fa-clock me-1"></i>
