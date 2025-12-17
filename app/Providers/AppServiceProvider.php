@@ -263,12 +263,12 @@ class AppServiceProvider extends ServiceProvider
                 $categories = Category::all();
                 foreach ($categories as $category) {
                     $category->items = $category->items()->approved()->orderByDesc('id')
-                        ->limit($latestItemsSection->items_number ?? 8)->get();
+                        ->limit($latestItemsSection->items_number ?? 16)->get();
                 }
                 return $categories;
             });
             $latestItems = Cache::remember('home_latest_items_cache', $cacheMinutes, function () use ($latestItemsSection) {
-                return Item::approved()->orderByDesc('id')->limit($latestItemsSection->items_number ?? 8)->get();
+                return Item::approved()->orderByDesc('id')->limit($latestItemsSection->items_number ?? 16)->get();
             });
             $view->with([
                 'latestItemsSection' => $latestItemsSection,
