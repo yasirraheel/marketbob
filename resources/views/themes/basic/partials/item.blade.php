@@ -133,6 +133,28 @@
                 </div>
             </div>
         @endif
+        @if (!$item->isFree())
+            @php
+                $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                if (!empty($validityPrices)) {
+                    $periods = array_keys($validityPrices);
+                    $minPeriod = !empty($periods) ? min($periods) : null;
+                    $maxPeriod = !empty($periods) ? max($periods) : null;
+                }
+            @endphp
+            @if (!empty($validityPrices) && isset($minPeriod) && isset($maxPeriod))
+                <div class="item-validity mt-2">
+                    <span class="text-muted small">
+                        <i class="fa-regular fa-clock me-1"></i>
+                        @if ($minPeriod == $maxPeriod)
+                            {{ $minPeriod }} {{ $minPeriod == 1 ? translate('Month') : translate('Months') }}
+                        @else
+                            {{ $minPeriod }}-{{ $maxPeriod }} {{ translate('Months') }}
+                        @endif
+                    </span>
+                </div>
+            @endif
+        @endif
         <div class="item-purchase">
             <div class="row row-cols-auto align-items-center justify-content-between g-3">
                 <div class="col">
