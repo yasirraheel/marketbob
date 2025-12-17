@@ -85,8 +85,8 @@ class SettingsController extends Controller
     public function profileUpdate(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
-            'profile_cover' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png'],
+            'profile_cover' => ['nullable', 'image', 'mimes:jpg,jpeg,png'],
             'profile_heading' => ['nullable', 'string', 'block_patterns', 'max:255'],
             'profile_description' => ['nullable', 'string'],
             'profile_contact_email' => ['nullable', 'email', 'block_patterns', 'max:255'],
@@ -108,10 +108,6 @@ class SettingsController extends Controller
 
             if ($request->has('avatar')) {
                 $avatar = $request->file('avatar');
-                if (!checkImageSize($avatar, '120x120')) {
-                    toastr()->error(translate('Avatar image must be 120x120px'));
-                    return back();
-                }
                 $avatar = imageUpload($avatar, $profilesPath, '120x120', null, $user->avatar);
             } else {
                 $avatar = $user->avatar;
@@ -119,10 +115,6 @@ class SettingsController extends Controller
 
             if ($request->has('profile_cover')) {
                 $profileCover = $request->file('profile_cover');
-                if (!checkImageSize($profileCover, '1200x500')) {
-                    toastr()->error(translate('Profile cover image must be 1200x500px'));
-                    return back();
-                }
                 $profileCover = imageUpload($profileCover, $profilesPath, '1200x500', null, $user->profile_cover);
             } else {
                 $profileCover = $user->profile_cover;
