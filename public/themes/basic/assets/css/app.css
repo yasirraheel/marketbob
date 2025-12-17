@@ -2470,7 +2470,9 @@ input[type="file"].form-control {
 }
 
 .item-badge.item-badge-sale {
-    background-color: var(--sale_item_badge_color);
+    background: linear-gradient(135deg, #ffd65b 0%, #f5b400 45%, #d18c00 100%);
+    color: #2b1b00;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
 }
 
 .item-badge.item-badge-free {
