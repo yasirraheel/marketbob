@@ -2302,7 +2302,7 @@ input[type="file"].form-control {
     -ms-flex-align: center;
     align-items: center;
     text-align: center;
-    padding: 40px 30px;
+    padding: 20px 15px;
     background-color: #fff;
     border-radius: 8px;
     height: 100%;
@@ -2310,7 +2310,7 @@ input[type="file"].form-control {
 
 @media (max-width: 575.98px) {
     .home-category {
-        padding: 20px;
+        padding: 15px 10px;
     }
 }
 
