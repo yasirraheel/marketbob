@@ -153,8 +153,8 @@
             @endphp
             @if (!empty($availablePeriods))
                 <div class="item-validity mt-2">
-                    <span class="text-muted small">
-                        <i class="fa-regular fa-clock me-1"></i>
+                    <span class="badge bg-light text-dark border d-inline-flex align-items-center" style="font-size: 11px; padding: 5px 10px; font-weight: 500;">
+                        <i class="fa-regular fa-clock me-1" style="font-size: 10px;"></i>
                         @if ($minPeriod == $maxPeriod)
                             {{ $minPeriod }} {{ $minPeriod == 1 ? translate('Month') : translate('Months') }}
                         @else
