@@ -2,8 +2,8 @@
 @section('title', $item->name)
 @section('breadcrumbs', Breadcrumbs::render('items.view', $item))
 @section('breadcrumbs_schema', Breadcrumbs::view('breadcrumbs::json-ld', 'items.view', $item))
-@section('og_image', $item->getImageLink())
-@section('description', shorterText(strip_tags($item->description), 155))
+@section('og_image', $item->getPreviewImageLink() ?: $item->getImageLink())
+@section('description', shorterText(strip_tags($item->description), 160))
 @section('keywords', $item->tags)
 @section('content')
     <div
