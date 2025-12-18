@@ -104,13 +104,26 @@
                                         method="POST">
                                         <input type="hidden" name="item_id" value="{{ $item->id }}">
                                         <input type="hidden" name="license_type" value="1">
+                                        @php
+                                            $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                                            $minPrice = null;
+                                            foreach ($validityPrices as $price) {
+                                                $priceValue = is_numeric($price) ? (float)$price : 0;
+                                                if ($priceValue > 0 && ($minPrice === null || $priceValue < $minPrice)) {
+                                                    $minPrice = $priceValue;
+                                                }
+                                            }
+                                            if ($minPrice === null && $item->regular_price > 0) {
+                                                $minPrice = $item->regular_price;
+                                            }
+                                        @endphp
                                         @if (@$settings->item->support_status && defaultSupportPeriod() && $item->isSupported())
                                             <input type="hidden" name="support"
                                                 value="{{ defaultSupportPeriod()->id }}">
                                         @endif
                                         <button class="btn btn-primary btn-md px-3" @disabled(authUser() && authUser()->id == $item->author_id)>
                                             <i class="fa fa-cart-shopping me-2"></i>
-                                            <span>{{ getAmount($item->price->regular, 2, '.', '', true) }}</span>
+                                            <span>{{ getAmount($minPrice ?? 0, 2, '.', '', true) }}</span>
                                         </button>
                                     </form>
                                 </div>
