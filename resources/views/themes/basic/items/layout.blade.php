@@ -99,24 +99,28 @@
                                 </div>
                             @endif
                             @if ($item->isPurchasingEnabled())
+                                @php
+                                    $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+                                    $minPrice = null;
+                                    $minPeriod = null;
+                                    foreach ($validityPrices as $period => $price) {
+                                        $priceValue = is_numeric($price) ? (float)$price : 0;
+                                        if ($priceValue > 0 && ($minPrice === null || $priceValue < $minPrice)) {
+                                            $minPrice = $priceValue;
+                                            $minPeriod = (int)$period;
+                                        }
+                                    }
+                                    if ($minPrice === null && $item->regular_price > 0) {
+                                        $minPrice = $item->regular_price;
+                                        $minPeriod = 1;
+                                    }
+                                @endphp
                                 <div class="col-auto d-inline d-lg-none">
                                     <form data-action="{{ route('cart.add-item') }}" class="add-to-cart-form"
                                         method="POST">
                                         <input type="hidden" name="item_id" value="{{ $item->id }}">
                                         <input type="hidden" name="license_type" value="1">
-                                        @php
-                                            $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
-                                            $minPrice = null;
-                                            foreach ($validityPrices as $price) {
-                                                $priceValue = is_numeric($price) ? (float)$price : 0;
-                                                if ($priceValue > 0 && ($minPrice === null || $priceValue < $minPrice)) {
-                                                    $minPrice = $priceValue;
-                                                }
-                                            }
-                                            if ($minPrice === null && $item->regular_price > 0) {
-                                                $minPrice = $item->regular_price;
-                                            }
-                                        @endphp
+                                        <input type="hidden" name="validity_period" value="{{ $minPeriod ?? 1 }}">
                                         @if (@$settings->item->support_status && defaultSupportPeriod() && $item->isSupported())
                                             <input type="hidden" name="support"
                                                 value="{{ defaultSupportPeriod()->id }}">
