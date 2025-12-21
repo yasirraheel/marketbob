@@ -31,7 +31,7 @@ class ExtensionController extends Controller
         if ($request->has('status')) {
             foreach ($request->settings as $key => $value) {
                 if (empty($value)) {
-                    toastr()->error(translate(':key cannot be empty', ['key' => str_replace('_', ucfirst($key))]));
+                    toastr()->error(translate(':key cannot be empty', ['key' => str_replace('_', ' ', $key)]));
                     return back();
                 }
             }
