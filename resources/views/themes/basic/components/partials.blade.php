@@ -63,7 +63,7 @@
     </script>
 @endif
 
-@if (extension('facebook_pixel')->status)
+@if (extension('facebook_pixel') && extension('facebook_pixel')->status)
     <script>
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -80,7 +80,7 @@
         src="https://www.facebook.com/tr?id={{ extension('facebook_pixel')->settings->pixel_id }}&ev=PageView&noscript=1" /></noscript>
 @endif
 
-@if (extension('tawk_to')->status)
+@if (extension('tawk_to') && extension('tawk_to')->status)
     <script type='text/javascript'>
         var Tawk_API = Tawk_API || {},
             Tawk_LoadStart = new Date();
@@ -95,3 +95,4 @@
         })();
     </script>
 @endif
+
