@@ -681,3 +681,72 @@ function fbPixelEvent($eventName, $data = [])
 {
     return fbPixelTrack($eventName, $data);
 }
+
+/**
+ * Track Purchase event for Facebook Pixel
+ * IMPORTANT: Only called when transaction is marked as PAID
+ * For manual payments: Only triggers after admin approves/completes the order
+ * @param \App\Models\Transaction $transaction
+ * @param array $sales
+ * @return void
+ */
+function trackFBPixelPurchase($transaction, $sales)
+{
+    if (!extension('facebook_pixel') || !extension('facebook_pixel')->status) {
+        return;
+    }
+
+    // Only track as purchase when transaction is actually paid
+    if (!$transaction->isPaid()) {
+        return;
+    }
+
+    // Prepare purchase event data
+    $value = $transaction->total;
+    $currency = @settings('general')->currency_code ?? 'USD';
+
+    // Prepare content IDs and content names from sales items
+    $contentIds = [];
+    $contentNames = [];
+
+    if (is_iterable($sales)) {
+        foreach ($sales as $sale) {
+            if ($sale && $sale->item) {
+                $contentIds[] = (string) $sale->item_id;
+                $contentNames[] = $sale->item->name;
+            }
+        }
+    }
+
+    // Store in session for later use on success page
+    session([
+        'fb_pixel_purchase_data' => [
+            'value' => $value,
+            'currency' => $currency,
+            'content_ids' => $contentIds,
+            'content_names' => $contentNames,
+            'content_type' => 'product',
+            'transaction_id' => $transaction->id,
+        ]
+    ]);
+}
+
+/**
+ * Get stored Facebook Pixel purchase data from session
+ * @return array|null
+ */
+function getFBPixelPurchaseData()
+{
+    if (!extension('facebook_pixel') || !extension('facebook_pixel')->status) {
+        return null;
+    }
+
+    $data = session('fb_pixel_purchase_data');
+
+    // Clear the session after retrieving
+    if ($data) {
+        session()->forget('fb_pixel_purchase_data');
+    }
+
+    return $data;
+}

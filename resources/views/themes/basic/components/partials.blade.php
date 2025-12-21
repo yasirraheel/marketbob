@@ -52,6 +52,7 @@
     <script async
         src="https://www.googletagmanager.com/gtag/js?id={{ extension('google_analytics')->settings->measurement_id }}">
     </script>
+    && extension('facebook_pixel')->settings->pixel_id)
     <script>
         window.dataLayer = window.dataLayer || [];
 
