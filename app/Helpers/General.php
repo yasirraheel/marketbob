@@ -653,3 +653,31 @@ function defaultSupportPeriod()
 {
     return SupportPeriod::default()->first();
 }
+
+/**
+ * Track a Facebook Pixel event
+ * @param string $eventName The name of the event (e.g., 'Purchase', 'AddToCart', 'InitiateCheckout')
+ * @param array $data Event data (optional)
+ * @return string JavaScript code to track the event
+ */
+function fbPixelTrack($eventName, $data = [])
+{
+    if (!extension('facebook_pixel') || !extension('facebook_pixel')->status) {
+        return '';
+    }
+
+    $jsData = json_encode($data);
+    return "<script>fbq('track', '{$eventName}', {$jsData});</script>";
+}
+
+/**
+ * Get Facebook Pixel event tracking script
+ * Useful for inline event tracking in blade templates
+ * @param string $eventName
+ * @param array $data
+ * @return string
+ */
+function fbPixelEvent($eventName, $data = [])
+{
+    return fbPixelTrack($eventName, $data);
+}
