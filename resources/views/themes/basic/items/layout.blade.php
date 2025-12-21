@@ -827,6 +827,61 @@
         <script src="{{ asset('vendor/libs/swiper/swiper-bundle.min.js') }}"></script>
         <script src="{{ asset('vendor/libs/jquery/fancybox/jquery.fancybox.min.js') }}"></script>
     @endpush
+    @push('scripts')
+    @if (extension('facebook_pixel') && extension('facebook_pixel')->status && extension('facebook_pixel')->settings->pixel_id)
+        @php
+            $currencyAC = @settings('general')->currency_code ?? 'USD';
+            $validityPricesAC = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+            $minPriceAC = null;
+            foreach ($validityPricesAC as $period => $price) {
+                $p = is_numeric($price) ? (float) $price : 0;
+                if ($p > 0 && ($minPriceAC === null || $p < $minPriceAC)) {
+                    $minPriceAC = $p;
+                }
+            }
+            if ($minPriceAC === null && $item->regular_price > 0) {
+                $minPriceAC = $item->regular_price;
+            }
+        @endphp
+        <script>
+            (function(){
+                var forms = document.querySelectorAll('.add-to-cart-form');
+                forms.forEach(function(form){
+                    form.addEventListener('submit', function(ev){
+                        ev.preventDefault();
+                        var url = form.getAttribute('data-action');
+                        var fd = new FormData(form);
+                        fetch(url, {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                            body: fd
+                        }).then(function(r){ return r.json(); }).then(function(json){
+                            if(json && json.success){
+                                try {
+                                    fbq('track', 'AddToCart', {
+                                        content_ids: ['{{ (string) $item->id }}'],
+                                        content_name: '{{ addslashes($item->name) }}',
+                                        content_type: 'product',
+                                        currency: '{{ $currencyAC }}',
+                                        value: {{ (float) ($minPriceAC ?? 0) }},
+                                        quantity: 1
+                                    });
+                                } catch(e) {}
+                            }
+                            if(json && json.error){
+                                if(window.toastr){ toastr.error(json.error); }
+                            } else if(json && json.success) {
+                                if(window.toastr){ toastr.success(json.success); }
+                            }
+                        }).catch(function(){
+                            form.submit();
+                        });
+                    });
+                });
+            })();
+        </script>
+    @endif
+    @endpush
     @include('themes.basic.includes.scripts')
 </body>
 

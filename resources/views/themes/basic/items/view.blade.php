@@ -73,3 +73,34 @@
         {!! schema($__env, 'item', ['item' => $item]) !!}
     @endpush
 @endsection
+
+@push('scripts')
+@if (extension('facebook_pixel') && extension('facebook_pixel')->status && extension('facebook_pixel')->settings->pixel_id)
+    @php
+        // Compute a representative price for ViewContent event
+        $validityPrices = @json_decode($item->validity_prices ?? '{}', true) ?? [];
+        $minPriceVC = null;
+        foreach ($validityPrices as $period => $price) {
+            $p = is_numeric($price) ? (float) $price : 0;
+            if ($p > 0 && ($minPriceVC === null || $p < $minPriceVC)) {
+                $minPriceVC = $p;
+            }
+        }
+        if ($minPriceVC === null && $item->regular_price > 0) {
+            $minPriceVC = $item->regular_price;
+        }
+        $currencyVC = @settings('general')->currency_code ?? 'USD';
+    @endphp
+    <script>
+        try {
+            fbq('track', 'ViewContent', {
+                content_ids: ['{{ (string) $item->id }}'],
+                content_name: '{{ addslashes($item->name) }}',
+                content_type: 'product',
+                value: {{ (float) ($minPriceVC ?? 0) }},
+                currency: '{{ $currencyVC }}'
+            });
+        } catch (e) {}
+    </script>
+@endif
+@endpush
