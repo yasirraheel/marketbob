@@ -5,7 +5,8 @@
       "Bash(dir:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: Add Gemini AI integration for AI-powered product descriptions\n\nIntegrate Google Gemini API to provide AI-generated content for items:\n- Generate SEO-friendly product descriptions\n- Suggest relevant tags based on context\n- Improve existing content for better readability\n\nBackend:\n- Add GeminiService with global accessibility\n- Create API endpoints for description generation, tag suggestions, and content improvement\n- Add extension migration and configuration\n- Implement authentication and validation\n\nFrontend:\n- Add JavaScript library \\(gemini-ai.js\\) with CKEditor integration\n- Add AI buttons to item create/edit pages\n- Implement loading states and error handling\n- Add toast notifications for user feedback\n\nConfiguration:\n- Add Gemini API settings to services.php\n- Update .env.example with API key variables\n- Create comprehensive documentation\n\nFeatures:\n- Globally accessible service for use anywhere in the application\n- Extension-based configuration via admin panel\n- Secure API key storage and authentication\n- CKEditor-compatible HTML output\n- SEO-optimized content generation\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git push)"
+      "Bash(git push)",
+      "Bash(git commit:*)"
     ]
   }
 }
