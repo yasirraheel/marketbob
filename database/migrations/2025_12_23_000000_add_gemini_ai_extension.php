@@ -19,11 +19,6 @@ class AddGeminiAiExtension extends Migration
             'settings' => json_encode([
                 'api_key' => '',
                 'model' => 'gemini-pro',
-                'enabled_features' => [
-                    'description_generation' => true,
-                    'tag_suggestions' => true,
-                    'content_improvement' => true,
-                ]
             ]),
             'instructions' => '<p>Follow these steps to setup Gemini AI:</p>
 <ol>
