@@ -24,4 +24,10 @@ Route::name('api.')->namespace('Api')->middleware('api.disable')->group(function
     Route::name('purchases.')->prefix('purchases')->group(function () {
         Route::post('validation', 'PurchaseController@validation')->name('validation');
     });
+    Route::name('gemini.')->prefix('gemini')->middleware('auth')->group(function () {
+        Route::post('generate-description', 'GeminiController@generateDescription')->name('generate-description');
+        Route::post('suggest-tags', 'GeminiController@suggestTags')->name('suggest-tags');
+        Route::post('improve-content', 'GeminiController@improveContent')->name('improve-content');
+        Route::get('status', 'GeminiController@checkStatus')->name('status');
+    });
 });

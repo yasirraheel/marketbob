@@ -316,6 +316,7 @@
         <script src="{{ asset('vendor/libs/tags-input/bootstrap-tagsinput.min.js') }}"></script>
         <script src="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.js') }}"></script>
         <script src="{{ asset('vendor/libs/jquery/jquery.priceformat.min.js') }}"></script>
+        <script src="{{ asset('vendor/libs/gemini/gemini-ai.js') }}"></script>
         <script src="{{ theme_assets_with_version('assets/js/item.js') }}"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -350,6 +351,28 @@
                             }
                         });
                     });
+                }
+
+                // Initialize Gemini AI for description
+                const descriptionTextarea = document.querySelector('textarea[name="description"]');
+                if (descriptionTextarea && typeof addGeminiButtonToCKEditor === 'function') {
+                    addGeminiButtonToCKEditor(
+                        descriptionTextarea,
+                        'input[name="name"]',
+                        'input[name="category"]',
+                        '#item-tags',
+                        null // features - will be gathered from DOM
+                    );
+                }
+
+                // Initialize Gemini AI for tag suggestions
+                if (typeof addGeminiTagSuggestions === 'function') {
+                    addGeminiTagSuggestions(
+                        '#item-tags',
+                        'input[name="name"]',
+                        () => window.editor && window.editor.getData ? window.editor.getData() : '',
+                        'input[name="category"]'
+                    );
                 }
             });
         </script>
